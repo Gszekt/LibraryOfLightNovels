@@ -1,0 +1,36 @@
+﻿<Page
+    x:Class="轻小说文库.SignInPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:轻小说文库"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid x:Name="signInGrid" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="2*"/>
+            </Grid.RowDefinitions>
+            <Border Grid.Row="1" BorderThickness="1" Height="32" Width="200" BorderBrush="{StaticResource AppThemeColor}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="&#xE13D;" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" Margin="16,0"/>
+                    <TextBox x:Name="userNameTextBox" BorderThickness="0" Width="152" Margin="0,2,0,0"/>
+                </StackPanel>
+            </Border>
+            <Border Grid.Row="3" BorderThickness="1" Height="32" Width="200" BorderBrush="{StaticResource AppThemeColor}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="&#xE1F6;" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" Margin="16,0"/>
+                    <PasswordBox x:Name="passwordPasswordBox" BorderThickness="0" Width="152" HorizontalContentAlignment="Left" Password=""/>
+                </StackPanel>
+            </Border>
+            <Button Grid.Row="5" x:Name="signInButton" Content="登陆" Background="{StaticResource AppThemeColor}" Height="32" Width="200" Click="signInButton_Click"/>
+        </Grid>
+    </Grid>
+</Page>
