@@ -36,7 +36,12 @@ namespace 轻小说文库
                 parameters.Clear();
                 var novelContentUri = (linkageAndTitles[1] as string).Replace("index.htm", titleAndLinkage.InterLinkage);
                 var htmlPage = await HTMLParser.Instance.GetHtml(novelContentUri);
-                if (titleAndLinkage.ChapterTitle.Contains("插图"))
+                if (htmlPage == null)
+                {
+                    MainPage.TipsTextBlock.Text = "网络或服务器故障！";
+                    MainPage.TipsStackPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                }
+                else if (titleAndLinkage.ChapterTitle.Contains("插图"))
                 {
                     var illustrations = IllustrationParser.Instance.GetIllustrations(htmlPage);
                     parameters.Add(illustrations);

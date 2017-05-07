@@ -30,9 +30,12 @@ namespace 轻小说文库
             TitleTextBlock = titleTextBlock;
             SetAppViewBackButton();
             SetTitleBarView();
-            CheckIdAndName();           
+            CheckIdAndNameAsync();
         }
 
+        /// <summary>
+        /// 设置标题栏颜色
+        /// </summary>
         private void SetTitleBarView()
         {
             var titleBar = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TitleBar;
@@ -47,7 +50,7 @@ namespace 轻小说文库
         /// <summary>
         /// 检查ID和password是否已经存在
         /// </summary>
-        public static void CheckIdAndName()
+        public async System.Threading.Tasks.Task CheckIdAndNameAsync()
         {
             var appData = ApplicationData.Current.LocalSettings;
             if (!appData.Values.ContainsKey("UserName") || appData.Values["UserName"] == null)
@@ -56,9 +59,18 @@ namespace 轻小说文库
             }
             else
             {
-                HTMLParser.Password = appData.Values["Password"] as string;
-                HTMLParser.UserName = appData.Values["UserName"] as string;
-                MainPage.ContentFrame.Navigate(typeof(BookItemsPage), new Button { Name = "updatedNovelsButton" });
+                var password = appData.Values["Password"] as string;
+                var userName = appData.Values["UserName"] as string;
+                if (await HTMLParser.SetHttpClientInstanceAsync(userName, password))
+                {
+                    ContentFrame.Navigate(typeof(BookItemsPage),
+                        new Button { Name = "updatedNovelsButton" });
+                }
+                else
+                {
+                    TipsTextBlock.Text = "网络或服务器故障！";
+                    TipsStackPanel.Visibility = Visibility.Visible;
+                }
             }
         }
 

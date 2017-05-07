@@ -51,22 +51,23 @@ namespace 轻小说文库
                     break;
             }
             pageNum = 1;
-            if (!HTMLParser.IsInstanceReady)
+            var htmlPage = await HTMLParser.Instance.GetHtml(requestURI + "&page=" + pageNum++);
+            if (htmlPage == null)
             {
-                OnNavigatedTo(e);
+                MainPage.TipsTextBlock.Text = "网络或服务器故障！";
+                MainPage.TipsStackPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
             }
             else
             {
-                var pageHtml = await HTMLParser.Instance.GetHtml(requestURI + "&page=" + pageNum++);
                 try
                 {
                     bookItems.Clear();
-                    BookItemParser.Instance.GetBookItems(pageHtml, bookItems);
+                    BookItemParser.Instance.GetBookItems(htmlPage, bookItems);
                     BookItemsGridView.ItemsSource = bookItems;
                 }
                 catch (System.Exception)
                 {
-                    MainPage.TipsTextBlock.Text = "出错！请检查您的网络！";
+                    MainPage.TipsTextBlock.Text = "出错！";
                     MainPage.TipsStackPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
                 }
             }
@@ -86,10 +87,18 @@ namespace 轻小说文库
             if (BookItemsScrollViewer.VerticalOffset > BookItemsScrollViewer.ScrollableHeight - 10 && flag)
             {
                 flag = false;
-                var pageHtml = await HTMLParser.Instance.GetHtml(requestURI + "&page=" + pageNum++);
+                var htmlPage = await HTMLParser.Instance.GetHtml(requestURI + "&page=" + pageNum++);
+                if (htmlPage == null)
+                {
+                    MainPage.TipsTextBlock.Text = "网络或服务器故障！";
+                    MainPage.TipsStackPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                }
+                else
+                {
+                    BookItemParser.Instance.GetBookItems(htmlPage, bookItems);
+                    BookItemsGridView.ItemsSource = bookItems;
+                }
                 flag = true;
-                BookItemParser.Instance.GetBookItems(pageHtml, bookItems);
-                BookItemsGridView.ItemsSource = bookItems;
             }
         }
     }

@@ -26,20 +26,36 @@ namespace 轻小说文库
             var bookItem = e.Parameter as BookItem;
             MainPage.TitleTextBlock.Text = bookItem.Title;
             var htmlPage = await HTMLParser.Instance.GetHtml(bookItem.Interlinkage);
-            var htmlDoc = new HtmlDocument();
-            htmlDoc.LoadHtml(htmlPage);
-            var contentNode = htmlDoc.GetElementbyId("content");
-            var summary = contentNode.ChildNodes[1].ChildNodes[7].ChildNodes[1].ChildNodes[3].ChildNodes[9].InnerText;
-            readLinkage = contentNode.ChildNodes[1].ChildNodes[11].ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[3].ChildNodes[0].Attributes["href"].Value;
-            bookItem.Summary = summary.Replace("&nbsp;", " ");
-            bookItem.ReadLinkage = readLinkage;
+            if (htmlPage == null)
+            {
+                MainPage.TipsTextBlock.Text = "网络或服务器故障！";
+                MainPage.TipsStackPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
+            }
+            else
+            {
+                var htmlDoc = new HtmlDocument();
+                htmlDoc.LoadHtml(htmlPage);
+                var contentNode = htmlDoc.GetElementbyId("content");
+                var summary = contentNode.ChildNodes[1].ChildNodes[7].ChildNodes[1].ChildNodes[3].ChildNodes[9].InnerText;
+                readLinkage = contentNode.ChildNodes[1].ChildNodes[11].ChildNodes[1].ChildNodes[1].ChildNodes[1].ChildNodes[3].ChildNodes[0].Attributes["href"].Value;
+                bookItem.Summary = summary.Replace("&nbsp;", " ");
+                bookItem.ReadLinkage = readLinkage;
 
-            bookDetailsGrid.DataContext = bookItem;
-            summaryTextBlock.Text = bookItem.Summary;
+                bookDetailsGrid.DataContext = bookItem;
+                summaryTextBlock.Text = bookItem.Summary;
 
-            htmlPage = await HTMLParser.Instance.GetHtml(bookItem.ReadLinkage);
-            var bookIndexes = BookIndexParser.Instance.GetBookIndexes(htmlPage);
-            volumnIndexGridView.ItemsSource = bookIndexes;
+                htmlPage = await HTMLParser.Instance.GetHtml(bookItem.ReadLinkage);
+                if (htmlPage == null)
+                {
+                    MainPage.TipsTextBlock.Text = "网络或服务器故障！";
+                    MainPage.TipsStackPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                }
+                else
+                {
+                    var bookIndexes = BookIndexParser.Instance.GetBookIndexes(htmlPage);
+                    volumnIndexGridView.ItemsSource = bookIndexes;
+                }
+            }
         }
 
         private void volumnIndexGridView_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -52,6 +68,6 @@ namespace 轻小说文库
                 parameters.Add(readLinkage);
                 MainPage.ContentFrame.Navigate(typeof(ChapterIndexPage), parameters);
             }
-        }        
+        }
     }
 }

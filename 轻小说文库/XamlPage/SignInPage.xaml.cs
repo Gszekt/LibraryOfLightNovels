@@ -16,7 +16,7 @@ namespace 轻小说文库
             this.InitializeComponent();
         }
 
-        private void signInButton_Click(object sender, RoutedEventArgs e)
+        private async void signInButton_ClickAsync(object sender, RoutedEventArgs e)
         {
             ApplicationDataContainer appData = ApplicationData.Current.LocalSettings;
             if (!(appData.Values.ContainsKey("UserName")))
@@ -27,10 +27,17 @@ namespace 轻小说文库
             {
                 appData.Values.Add("Password", passwordPasswordBox.Password);
             }
-            HTMLParser.Password = appData.Values["Password"] as string;
-            HTMLParser.UserName = appData.Values["UserName"] as string;
             signInGrid.Visibility = Visibility.Collapsed;
-            MainPage.MainSplitView.IsPaneOpen = true;
+            if (await HTMLParser.SetHttpClientInstanceAsync(userNameTextBox.Text, passwordPasswordBox.Password))
+            {
+                MainPage.ContentFrame.Navigate(typeof(BookItemsPage),
+                    new Button { Name = "updatedNovelsButton" });
+            }
+            else
+            {
+                MainPage.TipsTextBlock.Text = "网络或服务器故障！";
+                MainPage.TipsStackPanel.Visibility = Visibility.Visible;
+            }
         }
     }
 }

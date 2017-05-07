@@ -8,37 +8,17 @@ namespace 轻小说文库
 {
     public class HTMLParser
     {
-        private static bool isInstanceReady = false;
-        public static bool IsInstanceReady
+        private static HttpClient HttpClientInstance { get; set; }
+
+        private static bool isInstanceCreated = false;
+        public static bool IsInstanceCreated
         {
             get
-            {   return isInstanceReady; }
+            {   return isInstanceCreated; }
             private set
-            {   isInstanceReady = value; }
-        }
-        /// <summary>
-        /// 用户名
-        /// </summary>
-        private static string userName;
-        public static string UserName
-        {
-            private get { return userName; }
-            set
-            {
-                if (userName != value)
-                {
-                    userName = value;
-                    instance = new HTMLParser();
-                }
-            }
+            {   isInstanceCreated = value; }
         }
 
-        /// <summary>
-        /// 密码
-        /// </summary>
-        public static string Password { private get; set; }
-
-        private static HttpClient HttpClientInstance { get; set; }
         /// <summary>
         /// 获取一个HTMLParser的实例
         /// </summary>
@@ -55,24 +35,15 @@ namespace 轻小说文库
             }
         }
 
-        private HTMLParser()
-        {
-            HttpClientInstance = new HttpClient();
-            if (UserName != null && Password != null)
-            {
-                IsInstanceReady = false;
-                SetHttpClientInstance(UserName, Password);
-                IsInstanceReady = true;
-            }
-        }
         /// <summary>
         /// 获得HttpClient实例，此实例带有Cookie，用于之后的访问
         /// </summary>
         /// <param name="userName"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        private async void SetHttpClientInstance(string userName, string password)
+        public static async Task<bool> SetHttpClientInstanceAsync(string userName, string password)
         {
+            HttpClientInstance = new HttpClient();
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             Encoding encodingGBK = Encoding.GetEncoding(936);
 
@@ -94,11 +65,11 @@ namespace 轻小说文库
 
                 httpResponse = await HttpClientInstance.PostAsync(uri, new FormUrlEncodedContent(paramList));
                 httpResponse.EnsureSuccessStatusCode();
+                return true;
             }
-            catch (Exception)
+            catch
             {
-                MainPage.TipsTextBlock.Text = "出错！请检查您的网络！";
-                MainPage.TipsStackPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                return false;
             }
         }
 
@@ -118,8 +89,6 @@ namespace 轻小说文库
             }
             catch (Exception)
             {
-                MainPage.TipsTextBlock.Text = "出错！请检查您的网络！";
-                MainPage.TipsStackPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
                 return null;
             }    
         }
