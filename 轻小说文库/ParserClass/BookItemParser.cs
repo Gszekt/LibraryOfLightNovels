@@ -1,4 +1,5 @@
 ﻿using HtmlAgilityPack;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace 轻小说文库
@@ -18,23 +19,89 @@ namespace 轻小说文库
                     instance = new BookItemParser();
                 }
                 return instance;
-            }            
+            }
         }
-        private BookItemParser(){}
-        public void GetBookItems(string htmlPage , ObservableCollection<BookItem> bookItems)
+        private BookItemParser() { }
+        public async System.Threading.Tasks.Task GetBookItemsAsync(string htmlPage, ObservableCollection<BookItem> bookItems, string kind)
         {
-            HtmlDocument htmlDoc = new HtmlDocument();
+            var htmlDoc = new HtmlDocument();
             htmlDoc.LoadHtml(htmlPage);
-            HtmlNode contentNodes = htmlDoc.GetElementbyId("content");
-            HtmlNode tableNode = null;
+            var contentNodes = htmlDoc.GetElementbyId("content");
+            HtmlNode targetNode = null;
             foreach (var item in contentNodes.Elements("table"))
             {
                 if (item.GetAttributeValue("class", "f") == "grid")
                 {
-                    tableNode = item;
+                    targetNode = item;
                 }
             }
-            foreach (var tdNode in tableNode.Descendants("td"))//此层循环只循环一次
+            if (kind == "normal")
+            {
+                NormalGetBookItems(bookItems, targetNode);
+            }
+            else if (kind == "special")
+            {
+                await SpecialGetBookItems(bookItems, targetNode);
+            }
+        }
+
+        private static async System.Threading.Tasks.Task SpecialGetBookItems(ObservableCollection<BookItem> bookItems, HtmlNode targetNode)
+        {
+            foreach (var trNode in targetNode.Descendants("tr"))
+            {
+                foreach (var tdNode in trNode.Descendants("td"))
+                {
+                    if (tdNode.GetAttributeValue("class", "f") == "even")
+                    {
+                        foreach (var aNode in tdNode.Descendants("a"))
+                        {
+                            string href = aNode.GetAttributeValue("href", "f");
+                            var bookItem = new BookItem();
+                            bookItem.Interlinkage = href;
+                            bookItem.Title = aNode.InnerText.Split('(')[0].Replace("\r\n", " ").Trim();
+                            bookItems.Add(bookItem);
+                            break;
+                        }
+                        break;
+                    }
+                }
+            }
+            foreach (var bookItem in bookItems)
+            {
+                var htmlPage = await HTMLParser.Instance.GetHtml(bookItem.Interlinkage);
+                if (htmlPage == null)
+                {
+                    MainPage.TipsTextBlock.Text = "网络或服务器故障！";
+                    MainPage.TipsStackPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                }
+                else
+                {
+                    var htmlDoc = new HtmlDocument();
+                    htmlDoc.LoadHtml(htmlPage);
+                    var contentNodes = htmlDoc.GetElementbyId("content");
+                    var tableNodes = contentNodes.Descendants("table");
+                    foreach (var tableNode in tableNodes)
+                    {
+                        //应对某些属性没有的情况，比如甘城光辉游乐园没有最近更新
+                        var trNode = tableNode.ChildNodes[3];
+                        try { bookItem.Classification = trNode.ChildNodes[1].InnerText; } catch { bookItem.Classification = "文库分类："; }
+                        try { bookItem.Author = trNode.ChildNodes[3].InnerText; } catch { bookItem.Author = "小说作者："; }
+                        try { bookItem.State = trNode.ChildNodes[5].InnerText; } catch { bookItem.State = "文章状态："; }
+                        try { bookItem.LastUpdate = trNode.ChildNodes[7].InnerText; } catch { bookItem.LastUpdate = "最后更新："; }
+                        break;
+                    }
+                    foreach(var imgNode in contentNodes.ChildNodes[1].ChildNodes[7].Descendants("img"))
+                    {
+                        bookItem.CoverUri = imgNode.Attributes["src"].Value;
+                        break;
+                    }
+                }
+            }
+        }
+
+        private static void NormalGetBookItems(ObservableCollection<BookItem> bookItems, HtmlNode targetNode)
+        {
+            foreach (var tdNode in targetNode.Descendants("td"))//此层循环只循环一次
             {
                 foreach (var node in tdNode.ChildNodes)
                 {

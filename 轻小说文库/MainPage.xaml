@@ -139,15 +139,21 @@
                                 <TextBlock Text="完结全本" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
-                        <Button x:Name="accountButton" RelativePanel.Above="settingsButton" Click="accountButton_Click" >
+                        <Button x:Name="favouriteNovelsButton" RelativePanel.Below="completeNovelsButton" Click="bookClassificationButton_Click">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="Assets\Icons\ic_06.png" Width="40"/>
+                                <TextBlock Text="特别收藏" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="accountButton" RelativePanel.Above="settingsButton" Click="accountButton_Click" >
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="Assets\Icons\ic_07.png" Width="40"/>
                                 <TextBlock Text="账户" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
                         <Button x:Name="settingsButton" RelativePanel.AlignBottomWithPanel="True" Click="settingsButton_Click">
                             <StackPanel Orientation="Horizontal">
-                                <Image Source="Assets\Icons\ic_07.png" Width="40"/>
+                                <Image Source="Assets\Icons\ic_08.png" Width="40"/>
                                 <TextBlock Text="设置" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
