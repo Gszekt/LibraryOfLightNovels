@@ -8,16 +8,7 @@ namespace 轻小说文库
 {
     public class HTMLParser
     {
-        private static HttpClient HttpClientInstance { get; set; }
-
-        private static bool isInstanceCreated = false;
-        public static bool IsInstanceCreated
-        {
-            get
-            {   return isInstanceCreated; }
-            private set
-            {   isInstanceCreated = value; }
-        }
+		private static HttpClient httpClientInstance;
 
         /// <summary>
         /// 获取一个HTMLParser的实例
@@ -43,15 +34,15 @@ namespace 轻小说文库
         /// <returns></returns>
         public static async Task<bool> SetHttpClientInstanceAsync(string userName, string password)
         {
-            HttpClientInstance = new HttpClient();
+            httpClientInstance = new HttpClient();
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             Encoding encodingGBK = Encoding.GetEncoding(936);
 
             var uri = new Uri("http://www.wenku8.com/login.php?do=submit&jumpurl=%2Fother%2Fhexie.php");
-            HttpClientInstance.DefaultRequestHeaders.Add("UserAgent", "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0");
-            HttpClientInstance.DefaultRequestHeaders.Add("Referer", "http://www.wenku8.com/login.php?do=submit&jumpurl=%2Fother%2Fhexie.php");
-            HttpClientInstance.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-            HttpClientInstance.DefaultRequestHeaders.Add("Host", "www.wenku8.com");
+            httpClientInstance.DefaultRequestHeaders.Add("UserAgent", "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0");
+            httpClientInstance.DefaultRequestHeaders.Add("Referer", "http://www.wenku8.com/login.php?do=submit&jumpurl=%2Fother%2Fhexie.php");
+            httpClientInstance.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+            httpClientInstance.DefaultRequestHeaders.Add("Host", "www.wenku8.com");
             var httpResponse = new HttpResponseMessage();
             try
             {
@@ -63,7 +54,7 @@ namespace 轻小说文库
                 paramList.Add(new KeyValuePair<string, string>("action", "login"));
                 paramList.Add(new KeyValuePair<string, string>("submit", "%26%23160%3B%B5%C7%26%23160%3B%26%23160%3B%C2%BC%26%23160%3B"));
 
-                httpResponse = await HttpClientInstance.PostAsync(uri, new FormUrlEncodedContent(paramList));
+                httpResponse = await httpClientInstance.PostAsync(uri, new FormUrlEncodedContent(paramList));
                 httpResponse.EnsureSuccessStatusCode();
                 return true;
             }
@@ -72,6 +63,10 @@ namespace 轻小说文库
                 return false;
             }
         }
+
+		public static HttpClient GetHttpClientInstance() {
+			return httpClientInstance;
+		}
 
         /// <summary>
         /// 获取目标URI的HTML源码
@@ -84,7 +79,7 @@ namespace 轻小说文库
             Encoding encodingGBK = Encoding.GetEncoding(936);
             try
             {
-                var httpResponseBody = await HttpClientInstance.GetByteArrayAsync(url);
+                var httpResponseBody = await httpClientInstance.GetByteArrayAsync(url);
                 return encodingGBK.GetString(httpResponseBody);
             }
             catch (Exception)

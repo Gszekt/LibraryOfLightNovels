@@ -26,7 +26,8 @@ namespace 轻小说文库
             linkageAndTitles = e.Parameter as List<object>;
             MainPage.TitleTextBlock.Text = (linkageAndTitles[0] as BookIndex).VolumnTitle;
             chapterIndexListView.ItemsSource = (linkageAndTitles[0] as BookIndex).ChapterTitles;
-        }
+			MainPage.ProgressRing.IsActive = false;
+		}
 
         private async void chapterIndexListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -47,14 +48,16 @@ namespace 轻小说文库
                     parameters.Add(illustrations);
                     parameters.Add(false);
                     MainPage.ContentFrame.Navigate(typeof(NovelContentPage), parameters);
-                }
+					MainPage.ProgressRing.IsActive = true;
+				}
                 else
                 {
                     var novelText = NovelTextParser.Instance.GetNovelText(htmlPage);
                     parameters.Add(novelText);
                     parameters.Add(true);
                     MainPage.ContentFrame.Navigate(typeof(NovelContentPage), parameters);
-                }
+					MainPage.ProgressRing.IsActive = true;
+				}
             }
         }
     }

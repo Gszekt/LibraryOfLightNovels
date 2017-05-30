@@ -27,13 +27,15 @@ namespace 轻小说文库
                 novelContentScrollViewer.Visibility = Visibility.Visible;
                 novelContentTextBlock.Text = parameters[0] as string;
                 novelContentScrollViewer.ChangeView(0, 0, 0);
-            }
+				MainPage.ProgressRing.IsActive = false;
+			}
             else
             {
                 illustrationsListView.Visibility = Visibility.Visible;
                 novelContentScrollViewer.Visibility = Visibility.Collapsed;
                 illustrationsListView.ItemsSource = parameters[0] as ObservableCollection<Illustration>;
-            }
+				MainPage.ProgressRing.IsActive = false;
+			}
         }
     }
 }

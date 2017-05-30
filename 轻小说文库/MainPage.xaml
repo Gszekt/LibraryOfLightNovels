@@ -161,7 +161,10 @@
                 </Grid>
             </SplitView.Pane>
             <SplitView.Content>
-                <Frame x:Name="splitViewContentFrame" Padding="8"/>
+                <Grid>
+                    <ProgressRing x:Name="progressBar" IsActive="True" Width="60" Height="60" Foreground="{StaticResource AppThemeColor}"/>
+                    <Frame x:Name="splitViewContentFrame" Padding="8"/>
+                </Grid>
             </SplitView.Content>
         </SplitView>
     </Grid>
