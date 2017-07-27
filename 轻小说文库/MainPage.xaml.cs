@@ -3,17 +3,16 @@ using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
-namespace 轻小说文库
-{
+namespace 轻小说文库 {
 	/// <summary>
 	/// An empty page that can be used on its own or navigated to within a Frame.
 	/// </summary>
-	public sealed partial class MainPage : Page
-	{
+	public sealed partial class MainPage : Page {
 		public static Frame ContentFrame { get; set; }
 		public static TextBlock TitleTextBlock { get; set; }
 		public static SplitView MainSplitView { get; set; }
@@ -23,6 +22,7 @@ namespace 轻小说文库
 
 		public MainPage() {
 			this.InitializeComponent();
+
 			TipsStackPanel = tipsStackPanel;
 			TipsTextBlock = tipsTextBlock;
 			MainSplitView = menuSplitView;
@@ -32,6 +32,15 @@ namespace 轻小说文库
 			SetAppViewBackButton();
 			SetTitleBarView();
 			CheckIdAndNameAsync();
+
+			this.AddHandler(KeyDownEvent, new KeyEventHandler(BackKeysDown), true);
+		}
+
+		private void BackKeysDown(object sender, KeyRoutedEventArgs e) {
+			if (e.Key is Windows.System.VirtualKey.Back && splitViewContentFrame.CanGoBack) {
+				MainPage.ProgressRing.IsActive = true;
+				splitViewContentFrame.GoBack();
+			}
 		}
 
 		/// <summary>
@@ -54,13 +63,15 @@ namespace 轻小说文库
 			var appData = ApplicationData.Current.LocalSettings;
 			if (!appData.Values.ContainsKey("UserName") || appData.Values["UserName"] == null) {
 				ContentFrame.Navigate(typeof(SignInPage));
-			} else {
+			}
+			else {
 				var password = appData.Values["Password"] as string;
 				var userName = appData.Values["UserName"] as string;
 				if (await HTMLParser.SetHttpClientInstanceAsync(userName, password)) {
 					ContentFrame.Navigate(typeof(BookItemsPage),
 						new Button { Name = "updatedNovelsButton" });
-				} else {
+				}
+				else {
 					TipsTextBlock.Text = "网络或服务器故障！";
 					TipsStackPanel.Visibility = Visibility.Visible;
 				}
@@ -134,7 +145,7 @@ namespace 轻小说文库
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void accountButton_Click(object sender, RoutedEventArgs e) {
+		private void AccountButton_Click(object sender, RoutedEventArgs e) {
 
 		}
 

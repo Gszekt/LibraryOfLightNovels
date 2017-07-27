@@ -1,6 +1,7 @@
 ﻿using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -29,12 +30,6 @@ namespace 轻小说文库
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-//#if DEBUG
-//            if (System.Diagnostics.Debugger.IsAttached)
-//            {
-//                this.DebugSettings.EnableFrameRateCounter = true;
-//            }
-//#endif
             Frame rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,
@@ -67,14 +62,32 @@ namespace 轻小说文库
                 // Ensure the current window is active
                 Window.Current.Activate();
             }
-        }
 
-        /// <summary>
-        /// Invoked when Navigation to a certain page fails
-        /// </summary>
-        /// <param name="sender">The Frame which failed navigation</param>
-        /// <param name="e">Details about the navigation failure</param>
-        void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+			Window.Current.CoreWindow.PointerPressed += OnPointerPressed;
+		}
+
+		/// <summary>
+		/// 处理鼠标侧面导航键
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
+		private void OnPointerPressed(CoreWindow sender, PointerEventArgs args) {
+			var props = args.CurrentPoint.Properties;
+			if(!props.IsLeftButtonPressed && !props.IsMiddleButtonPressed && !props.IsRightButtonPressed
+				&& props.IsXButton1Pressed != props.IsXButton2Pressed) {
+				if (props.IsXButton1Pressed&& MainPage.ContentFrame.CanGoBack) {
+					MainPage.ContentFrame.GoBack();
+					args.Handled = true;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Invoked when Navigation to a certain page fails
+		/// </summary>
+		/// <param name="sender">The Frame which failed navigation</param>
+		/// <param name="e">Details about the navigation failure</param>
+		void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
             throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
         }
@@ -90,10 +103,10 @@ namespace 轻小说文库
         {
             var deferral = e.SuspendingOperation.GetDeferral();
 			//TODO: Save application state and stop any background activity
-			HTMLParser.GetHttpClientInstance().Dispose();
-            deferral.Complete();
-        }
-
-		
+			if (HTMLParser.GetHttpClientInstance() != null) {
+				HTMLParser.GetHttpClientInstance().Dispose();
+			}
+			deferral.Complete();
+        }	
     }
 }
