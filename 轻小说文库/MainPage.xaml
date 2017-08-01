@@ -50,7 +50,7 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Button x:Name="menuButton" Width="48" Height="36" Style="{StaticResource CustomButtonStyle}" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Click="menuButton_Click">
+            <Button x:Name="menuButton" Width="48" Height="36" Style="{StaticResource CustomButtonStyle}" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Click="MenuButton_Click">
                 <!--<Button.Style>
                     <Style TargetType="Button" BasedOn="{StaticResource CustomButtonStyle}">
                         <Setter Property="Template">
@@ -107,37 +107,37 @@
                         </Style>
                     </Grid.Resources>
                     <RelativePanel >
-                        <Button x:Name="hotNovelsButton" Click="bookClassificationButton_Click">
+                        <Button x:Name="hotNovelsButton" Click="BookClassificationButton_Click">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="Assets\Icons\ic_01.png" Width="40"/>
                                 <TextBlock Text="热门轻小说" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
-                        <Button x:Name="animatedNovelsButton" RelativePanel.Below="hotNovelsButton" Click="bookClassificationButton_Click">
+                        <Button x:Name="animatedNovelsButton" RelativePanel.Below="hotNovelsButton" Click="BookClassificationButton_Click">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="Assets\Icons\ic_02.png" Width="40"/>
                                 <TextBlock Text="动画化作品" VerticalAlignment="Center" />
                             </StackPanel>
                         </Button>
-                        <Button x:Name="updatedNovelsButton" RelativePanel.Below="animatedNovelsButton" Click="bookClassificationButton_Click">
+                        <Button x:Name="updatedNovelsButton" RelativePanel.Below="animatedNovelsButton" Click="BookClassificationButton_Click">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="Assets\Icons\ic_03.png" Width="40"/>
                                 <TextBlock Text="今日更新" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
-                        <Button x:Name="newNovelsButton" RelativePanel.Below="updatedNovelsButton" Click="bookClassificationButton_Click" >
+                        <Button x:Name="newNovelsButton" RelativePanel.Below="updatedNovelsButton" Click="BookClassificationButton_Click" >
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="Assets\Icons\ic_04.png" Width="40"/>
                                 <TextBlock Text="新书一览" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
-                        <Button x:Name="completeNovelsButton" RelativePanel.Below="newNovelsButton" Click="bookClassificationButton_Click">
+                        <Button x:Name="completeNovelsButton" RelativePanel.Below="newNovelsButton" Click="BookClassificationButton_Click">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="Assets\Icons\ic_05.png" Width="40"/>
                                 <TextBlock Text="完结全本" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
-                        <Button x:Name="favouriteNovelsButton" RelativePanel.Below="completeNovelsButton" Click="bookClassificationButton_Click">
+                        <Button x:Name="favouriteNovelsButton" RelativePanel.Below="completeNovelsButton" Click="BookClassificationButton_Click">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="Assets\Icons\ic_06.png" Width="40"/>
                                 <TextBlock Text="特别收藏" VerticalAlignment="Center"/>
@@ -149,7 +149,7 @@
                                 <TextBlock Text="账户" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
-                        <Button x:Name="settingsButton" RelativePanel.AlignBottomWithPanel="True" Click="settingsButton_Click">
+                        <Button x:Name="settingsButton" RelativePanel.AlignBottomWithPanel="True" Click="SettingsButton_Click">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="Assets\Icons\ic_08.png" Width="40"/>
                                 <TextBlock Text="设置" VerticalAlignment="Center"/>

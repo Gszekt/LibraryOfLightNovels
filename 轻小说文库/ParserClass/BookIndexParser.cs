@@ -3,10 +3,6 @@ using System.Collections.ObjectModel;
 
 namespace 轻小说文库 {
 	public class BookIndexParser {
-		private static ObservableCollection<BookIndex> bookIndexes;
-		private BookIndexParser() {
-			bookIndexes = new ObservableCollection<BookIndex>();
-		}
 		private static BookIndexParser instance;
 		/// <summary>
 		/// 获取一个BookindexParser的实例
@@ -19,10 +15,8 @@ namespace 轻小说文库 {
 				return instance;
 			}
 		}
-		public ObservableCollection<BookIndex> GetBookIndexes(string htmlPage) {
+		public void GetBookIndexes(string htmlPage, ObservableCollection<BookIndex> bookIndexes) {
 			var bookIndex = new BookIndex();
-			bookIndexes.Clear();
-
 			var htmlDoc = new HtmlDocument();
 			htmlDoc.LoadHtml(htmlPage);
 			var contentNode = htmlDoc.DocumentNode;
@@ -46,7 +40,6 @@ namespace 轻小说文库 {
 					}
 				}
 			}
-			return bookIndexes;
 		}
 	}
 }

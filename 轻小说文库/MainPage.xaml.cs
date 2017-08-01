@@ -38,7 +38,8 @@ namespace 轻小说文库 {
 
 		private void BackKeysDown(object sender, KeyRoutedEventArgs e) {
 			if (e.Key is Windows.System.VirtualKey.Back && splitViewContentFrame.CanGoBack) {
-				MainPage.ProgressRing.IsActive = true;
+				ProgressRing.IsActive = true;
+				ProgressRing.Visibility = Visibility.Visible;
 				splitViewContentFrame.GoBack();
 			}
 		}
@@ -59,17 +60,20 @@ namespace 轻小说文库 {
 		/// <summary>
 		/// 检查ID和password是否已经存在
 		/// </summary>
-		public async System.Threading.Tasks.Task CheckIdAndNameAsync() {
+		public async void CheckIdAndNameAsync() {
 			var appData = ApplicationData.Current.LocalSettings;
 			if (!appData.Values.ContainsKey("UserName") || appData.Values["UserName"] == null) {
+				ProgressRing.IsActive = true;
+				ProgressRing.Visibility = Visibility.Visible;
 				ContentFrame.Navigate(typeof(SignInPage));
 			}
 			else {
 				var password = appData.Values["Password"] as string;
 				var userName = appData.Values["UserName"] as string;
 				if (await HTMLParser.SetHttpClientInstanceAsync(userName, password)) {
-					ContentFrame.Navigate(typeof(BookItemsPage),
-						new Button { Name = "updatedNovelsButton" });
+					ProgressRing.IsActive = true;
+					ProgressRing.Visibility = Visibility.Visible;
+					ContentFrame.Navigate(typeof(BookItemsPage), new Button { Name = "updatedNovelsButton" });
 				}
 				else {
 					TipsTextBlock.Text = "网络或服务器故障！";
@@ -105,6 +109,7 @@ namespace 轻小说文库 {
 		private void BackRequested(object sender, BackRequestedEventArgs e) {
 			if (splitViewContentFrame.CanGoBack) {
 				MainPage.ProgressRing.IsActive = true;
+				MainPage.ProgressRing.Visibility = Visibility.Visible;
 				splitViewContentFrame.GoBack();
 			}
 		}
@@ -114,7 +119,7 @@ namespace 轻小说文库 {
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void menuButton_Click(object sender, RoutedEventArgs e) {
+		private void MenuButton_Click(object sender, RoutedEventArgs e) {
 			menuSplitView.IsPaneOpen = !menuSplitView.IsPaneOpen;
 		}
 
@@ -123,11 +128,12 @@ namespace 轻小说文库 {
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void bookClassificationButton_Click(object sender, RoutedEventArgs e) {
+		private void BookClassificationButton_Click(object sender, RoutedEventArgs e) {
 			if (Window.Current.Bounds.Width <= 1200) {
 				menuSplitView.IsPaneOpen = false;
 			}
 			MainPage.ProgressRing.IsActive = true;
+			MainPage.ProgressRing.Visibility = Visibility.Visible;
 			splitViewContentFrame.Navigate(typeof(BookItemsPage), sender);
 		}
 
@@ -136,7 +142,7 @@ namespace 轻小说文库 {
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void settingsButton_Click(object sender, RoutedEventArgs e) {
+		private void SettingsButton_Click(object sender, RoutedEventArgs e) {
 
 		}
 

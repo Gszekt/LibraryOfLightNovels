@@ -5,7 +5,8 @@
     xmlns:local="using:轻小说文库"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    NavigationCacheMode="Required">
 
     <Page.Resources>
         <local:CoverUriToCoverImageConverter x:Key="u2i"/>
@@ -17,7 +18,7 @@
     <Grid>
         <Image Source="Assets\background.jpg" Stretch="Fill"/>
         <ScrollViewer x:Name="novelContentScrollViewer" VerticalScrollBarVisibility="Auto">
-                <TextBlock x:Name="novelContentTextBlock" TextWrapping="Wrap" Margin="12"/>
+            <TextBlock x:Name="novelContentTextBlock" TextWrapping="Wrap" Margin="12"/>
         </ScrollViewer>
         <ListView x:Name="illustrationsListView" ScrollViewer.VerticalScrollBarVisibility="Auto"
                   ItemTemplate="{StaticResource IllustrationViewTemplate}" />
