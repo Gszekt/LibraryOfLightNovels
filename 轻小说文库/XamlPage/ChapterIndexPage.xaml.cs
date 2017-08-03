@@ -52,13 +52,13 @@ namespace 轻小说文库 {
 						var illustrations = IllustrationParser.Instance.GetIllustrations(htmlPage);
 						parameters.Add(illustrations);
 						parameters.Add(false);
-						MainPage.ContentFrame.Navigate(typeof(NovelContentPage), parameters);
+						this.Frame.Navigate(typeof(NovelContentPage), parameters);
 					}
 					else {
 						var novelText = NovelTextParser.Instance.GetNovelText(htmlPage);
 						parameters.Add(novelText);
 						parameters.Add(true);
-						MainPage.ContentFrame.Navigate(typeof(NovelContentPage), parameters);
+						this.Frame.Navigate(typeof(NovelContentPage), parameters);
 					}
 				}
 			}

@@ -1,6 +1,8 @@
 ﻿using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.Phone.UI.Input;
+using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -55,34 +57,22 @@ namespace 轻小说文库 {
 				Window.Current.Activate();
 			}
 
+			// 设置标题栏颜色
+			var titleBar = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TitleBar;
+			titleBar.BackgroundColor = Color.FromArgb(255, 0, 122, 204);
+			titleBar.ButtonBackgroundColor = Color.FromArgb(255, 0, 122, 204);
+			titleBar.ButtonHoverBackgroundColor = Color.FromArgb(255, 0, 122, 224);
+			titleBar.ButtonPressedBackgroundColor = Color.FromArgb(255, 0, 122, 184);
+			titleBar.ButtonInactiveBackgroundColor = Color.FromArgb(255, 0, 122, 224);
+			titleBar.InactiveBackgroundColor = Color.FromArgb(255, 0, 122, 224);
+
+			// 添加对鼠标XButton1的响应
 			Window.Current.CoreWindow.PointerPressed += OnPointerPressed;
-		}
 
-		/// <summary>
-		/// 处理鼠标侧面导航键
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="args"></param>
-		private void OnPointerPressed(CoreWindow sender, PointerEventArgs args) {
-			var props = args.CurrentPoint.Properties;
-			if (!props.IsLeftButtonPressed && !props.IsMiddleButtonPressed && !props.IsRightButtonPressed
-				&& props.IsXButton1Pressed != props.IsXButton2Pressed) {
-				if (props.IsXButton1Pressed && MainPage.ContentFrame.CanGoBack) {
-					MainPage.ProgressRing.IsActive = true;
-					MainPage.ProgressRing.Visibility = Visibility.Visible;
-					MainPage.ContentFrame.GoBack();
-					args.Handled = true;
-				}
-			}
-		}
-
-		/// <summary>
-		/// Invoked when Navigation to a certain page fails
-		/// </summary>
-		/// <param name="sender">The Frame which failed navigation</param>
-		/// <param name="e">Details about the navigation failure</param>
-		void OnNavigationFailed(object sender, NavigationFailedEventArgs e) {
-			throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
+			// 设置标题栏返回键
+			SystemNavigationManager.GetForCurrentView().BackRequested += BackRequested;
+			SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = MainPage.ContentFrame.CanGoBack ? AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
+			MainPage.ContentFrame.Navigated += OnNavigated;
 		}
 
 		/// <summary>
@@ -99,6 +89,65 @@ namespace 轻小说文库 {
 				HTMLParser.GetHttpClientInstance().Dispose();
 			}
 			deferral.Complete();
+		}
+
+		/// <summary>
+		/// Invoked when Navigation to a certain page fails
+		/// </summary>
+		/// <param name="sender">The Frame which failed navigation</param>
+		/// <param name="e">Details about the navigation failure</param>
+		void OnNavigationFailed(object sender, NavigationFailedEventArgs e) {
+			throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
+		}
+
+		/// <summary>
+		/// 处理鼠标侧面导航键（XButton1）
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
+		private void OnPointerPressed(CoreWindow sender, PointerEventArgs args) {
+			var props = args.CurrentPoint.Properties;
+			if (!props.IsLeftButtonPressed && !props.IsMiddleButtonPressed && !props.IsRightButtonPressed
+				&& props.IsXButton1Pressed != props.IsXButton2Pressed) {
+				if (props.IsXButton1Pressed && MainPage.ContentFrame.CanGoBack) {
+					MainPage.ProgressRing.IsActive = true;
+					MainPage.ProgressRing.Visibility = Visibility.Visible;
+					MainPage.ContentFrame.GoBack();
+					args.Handled = true;
+				}
+			}
+		}
+
+		bool isTop = false;
+		/// <summary>
+		/// 标题栏返回键 事件处理
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void BackRequested(object sender, BackRequestedEventArgs e) {
+			if (MainPage.ContentFrame.CanGoBack) {
+				MainPage.ProgressRing.IsActive = true;
+				MainPage.ProgressRing.Visibility = Visibility.Visible;
+				MainPage.ContentFrame.GoBack();
+				isTop = false;
+			}
+			else if (isTop) {
+				App.Current.Exit();
+			}
+			else {
+				isTop = true;
+			}
+			e.Handled = true;
+		}
+
+		/// <summary>
+		/// 控制标题栏返回键的可见性
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void OnNavigated(object sender, NavigationEventArgs e) {
+			SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = ((Frame)sender).CanGoBack ?
+				AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
 		}
 	}
 }

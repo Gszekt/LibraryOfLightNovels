@@ -29,32 +29,22 @@ namespace 轻小说文库 {
 			ContentFrame = splitViewContentFrame;
 			TitleTextBlock = titleTextBlock;
 			ProgressRing = progressBar;
-			SetAppViewBackButton();
-			SetTitleBarView();
 			CheckIdAndNameAsync();
 
 			this.AddHandler(KeyDownEvent, new KeyEventHandler(BackKeysDown), true);
 		}
 
+		/// <summary>
+		/// 处理键盘退格键，返回上一页
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void BackKeysDown(object sender, KeyRoutedEventArgs e) {
 			if (e.Key is Windows.System.VirtualKey.Back && splitViewContentFrame.CanGoBack) {
 				ProgressRing.IsActive = true;
 				ProgressRing.Visibility = Visibility.Visible;
 				splitViewContentFrame.GoBack();
 			}
-		}
-
-		/// <summary>
-		/// 设置标题栏颜色
-		/// </summary>
-		private void SetTitleBarView() {
-			var titleBar = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TitleBar;
-			titleBar.BackgroundColor = Color.FromArgb(255, 0, 122, 204);
-			titleBar.ButtonBackgroundColor = Color.FromArgb(255, 0, 122, 204);
-			titleBar.ButtonHoverBackgroundColor = Color.FromArgb(255, 0, 122, 224);
-			titleBar.ButtonPressedBackgroundColor = Color.FromArgb(255, 0, 122, 184);
-			titleBar.ButtonInactiveBackgroundColor = Color.FromArgb(255, 0, 122, 224);
-			titleBar.InactiveBackgroundColor = Color.FromArgb(255, 0, 122, 224);
 		}
 
 		/// <summary>
@@ -79,38 +69,6 @@ namespace 轻小说文库 {
 					TipsTextBlock.Text = "网络或服务器故障！";
 					TipsStackPanel.Visibility = Visibility.Visible;
 				}
-			}
-		}
-
-		/// <summary>
-		/// 设置标题栏返回键
-		/// </summary>
-		private void SetAppViewBackButton() {
-			SystemNavigationManager.GetForCurrentView().BackRequested += BackRequested;
-			SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = splitViewContentFrame.CanGoBack ? AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
-			splitViewContentFrame.Navigated += OnNavigated;
-		}
-
-		/// <summary>
-		/// 控制标题栏返回键的可见性
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void OnNavigated(object sender, NavigationEventArgs e) {
-			SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = ((Frame)sender).CanGoBack ?
-				AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
-		}
-
-		/// <summary>
-		/// 标题栏返回键 事件处理
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void BackRequested(object sender, BackRequestedEventArgs e) {
-			if (splitViewContentFrame.CanGoBack) {
-				MainPage.ProgressRing.IsActive = true;
-				MainPage.ProgressRing.Visibility = Visibility.Visible;
-				splitViewContentFrame.GoBack();
 			}
 		}
 

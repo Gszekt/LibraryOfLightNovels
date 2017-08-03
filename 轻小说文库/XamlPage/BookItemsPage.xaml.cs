@@ -13,7 +13,7 @@ namespace 轻小说文库 {
 		private static string kind;
 		private static string localTitle;
 		private ObservableCollection<BookItem> BookItems { get; set; }
-		public string requestURI { get; private set; }
+		public string RequestURI { get; private set; }
 
 		public BookItemsPage() {
 			this.InitializeComponent();
@@ -25,32 +25,32 @@ namespace 轻小说文库 {
 				var button = e.Parameter as Button;
 				switch (button.Name) {
 					case "hotNovelsButton":
-						requestURI = BookClassificationURI.hotNovelsURI;
+						RequestURI = BookClassificationURI.hotNovelsURI;
 						kind = "normal";
 						localTitle = MainPage.TitleTextBlock.Text = "热门轻小说";
 						break;
 					case "animatedNovelsButton":
-						requestURI = BookClassificationURI.animatedNovelsURI;
+						RequestURI = BookClassificationURI.animatedNovelsURI;
 						kind = "normal";
 						localTitle = MainPage.TitleTextBlock.Text = "动画化作品";
 						break;
 					case "updatedNovelsButton":
-						requestURI = BookClassificationURI.updatedNovelsURI;
+						RequestURI = BookClassificationURI.updatedNovelsURI;
 						kind = "normal";
 						localTitle = MainPage.TitleTextBlock.Text = "今日更新";
 						break;
 					case "newNovelsButton":
-						requestURI = BookClassificationURI.newNovelsURI;
+						RequestURI = BookClassificationURI.newNovelsURI;
 						kind = "normal";
 						localTitle = MainPage.TitleTextBlock.Text = "新书一览";
 						break;
 					case "completeNovelsButton":
-						requestURI = BookClassificationURI.completeNovelsURI;
+						RequestURI = BookClassificationURI.completeNovelsURI;
 						kind = "normal";
 						localTitle = MainPage.TitleTextBlock.Text = "完结全本";
 						break;
 					case "favouriteNovelsButton":
-						requestURI = BookClassificationURI.favouriteNovelsURI;
+						RequestURI = BookClassificationURI.favouriteNovelsURI;
 						kind = "special";
 						localTitle = MainPage.TitleTextBlock.Text = "特别收藏";
 						break;
@@ -60,10 +60,10 @@ namespace 轻小说文库 {
 				pageNum = 1;
 				string htmlPage = null;
 				if (kind == "normal") {
-					htmlPage = await HTMLParser.Instance.GetHtml(requestURI + "&page=" + pageNum++);
+					htmlPage = await HTMLParser.Instance.GetHtml(RequestURI + "&page=" + pageNum++);
 				}
 				else {
-					htmlPage = await HTMLParser.Instance.GetHtml(requestURI);
+					htmlPage = await HTMLParser.Instance.GetHtml(RequestURI);
 				}
 				if (htmlPage == null) {
 					MainPage.TipsTextBlock.Text = "网络或服务器故障！";
@@ -72,7 +72,7 @@ namespace 轻小说文库 {
 				else {
 					try {
 						BookItems.Clear();
-						await BookItemParser.Instance.GetBookItemsAsync(htmlPage, BookItems, kind);
+						BookItemParser.Instance.GetBookItems(htmlPage, BookItems, kind);
 						MainPage.ProgressRing.IsActive = false;
 						MainPage.ProgressRing.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
 					}
@@ -89,28 +89,19 @@ namespace 轻小说文库 {
 			}
 		}
 
-		private void BookItemsGridView_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-			BookItem bookItem = BookItemsGridView.SelectedItem as BookItem;
-			if (bookItem != null) {
-				MainPage.ContentFrame.Navigate(typeof(BookDetalsPage), bookItem);
-				MainPage.ProgressRing.IsActive = true;
-				MainPage.ProgressRing.Visibility = Windows.UI.Xaml.Visibility.Visible;
-			}
-		}
-
 		bool flag = true;
 		private async void BookItemsScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e) {
 			if (BookItemsScrollViewer.VerticalOffset > BookItemsScrollViewer.ScrollableHeight - 10 && flag) {
 				flag = false;
 				MainPage.ProgressRing.IsActive = true;
 				MainPage.ProgressRing.Visibility = Windows.UI.Xaml.Visibility.Visible;
-				var htmlPage = await HTMLParser.Instance.GetHtml(requestURI + "&page=" + pageNum++);
+				var htmlPage = await HTMLParser.Instance.GetHtml(RequestURI + "&page=" + pageNum++);
 				if (htmlPage == null) {
 					MainPage.TipsTextBlock.Text = "网络或服务器故障！";
 					MainPage.TipsStackPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
 				}
 				else {
-					await BookItemParser.Instance.GetBookItemsAsync(htmlPage, BookItems, "normal");
+					BookItemParser.Instance.GetBookItems(htmlPage, BookItems, "normal");
 				}
 				flag = true;
 				MainPage.ProgressRing.IsActive = false;
@@ -119,9 +110,8 @@ namespace 轻小说文库 {
 		}
 
 		private void BookItemsGridView_ItemClick(object sender, ItemClickEventArgs e) {
-			var bookItem = e.ClickedItem as BookItem;
-			if (bookItem != null) {
-				MainPage.ContentFrame.Navigate(typeof(BookDetalsPage), bookItem);
+			if (e.ClickedItem is BookItem) {
+				this.Frame.Navigate(typeof(BookDetalsPage), e.ClickedItem);
 				MainPage.ProgressRing.IsActive = true;
 				MainPage.ProgressRing.Visibility = Windows.UI.Xaml.Visibility.Visible;
 			}

@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace 轻小说文库
-{
-	public class BookItemParser
-	{
+namespace 轻小说文库 {
+	public class BookItemParser {
 		private static BookItemParser instance;
 		/// <summary>
 		/// 获取一个BookItemParser的实例
@@ -19,7 +17,7 @@ namespace 轻小说文库
 			}
 		}
 		private BookItemParser() { }
-		public async System.Threading.Tasks.Task GetBookItemsAsync(string htmlPage, ObservableCollection<BookItem> bookItems, string kind) {
+		public void GetBookItems(string htmlPage, ObservableCollection<BookItem> bookItems, string kind) {
 			var htmlDoc = new HtmlDocument();
 			htmlDoc.LoadHtml(htmlPage);
 			var contentNodes = htmlDoc.GetElementbyId("content");
@@ -31,20 +29,22 @@ namespace 轻小说文库
 			}
 			if (kind == "normal") {
 				NormalGetBookItems(bookItems, targetNode);
-			} else if (kind == "special") {
-				await SpecialGetBookItems(bookItems, targetNode);
+			}
+			else if (kind == "special") {
+				SpecialGetBookItemsAsync(bookItems, targetNode);
 			}
 		}
 
-		private static async System.Threading.Tasks.Task SpecialGetBookItems(ObservableCollection<BookItem> bookItems, HtmlNode targetNode) {
+		private static async void SpecialGetBookItemsAsync(ObservableCollection<BookItem> bookItems, HtmlNode targetNode) {
 			foreach (var trNode in targetNode.Descendants("tr")) {
 				foreach (var tdNode in trNode.Descendants("td")) {
 					if (tdNode.GetAttributeValue("class", "f") == "even") {
 						foreach (var aNode in tdNode.Descendants("a")) {
 							string href = aNode.GetAttributeValue("href", "f");
-							var bookItem = new BookItem();
-							bookItem.Interlinkage = href;
-							bookItem.Title = aNode.InnerText.Split('(')[0].Replace("\r\n", " ").Trim();
+							var bookItem = new BookItem() {
+								Interlinkage = href,
+								Title = aNode.InnerText.Split('(')[0].Replace("\r\n", " ").Trim(),
+							};
 							bookItems.Add(bookItem);
 							break;
 						}
@@ -57,7 +57,8 @@ namespace 轻小说文库
 				if (htmlPage == null) {
 					MainPage.TipsTextBlock.Text = "网络或服务器故障！";
 					MainPage.TipsStackPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
-				} else {
+				}
+				else {
 					var htmlDoc = new HtmlDocument();
 					htmlDoc.LoadHtml(htmlPage);
 					var contentNodes = htmlDoc.GetElementbyId("content");
@@ -84,8 +85,7 @@ namespace 轻小说文库
 			{
 				foreach (var node in tdNode.ChildNodes) {
 					if (node.Name == "div") {
-						var bookItem = new BookItem();
-						bookItem.CoverUri = node.ChildNodes[1].ChildNodes[1].ChildNodes[1].Attributes["src"].Value;
+						var bookItem = new BookItem() { CoverUri = node.ChildNodes[1].ChildNodes[1].ChildNodes[1].Attributes["src"].Value };
 						var temps = node.ChildNodes[1].ChildNodes[1].Attributes["title"].Value.Split('(');
 						bookItem.Title = temps[0].Replace("\r\n", " ").Trim();//标题
 						bookItem.Interlinkage = node.ChildNodes[1].ChildNodes[1].Attributes["href"].Value;
@@ -97,6 +97,7 @@ namespace 轻小说文库
 						bookItem.LastUpdate = temps[0];//最近更新
 						bookItem.Summary = node.ChildNodes[3].ChildNodes[7].InnerText;
 						bookItems.Add(bookItem);
+
 					}
 				}
 			}

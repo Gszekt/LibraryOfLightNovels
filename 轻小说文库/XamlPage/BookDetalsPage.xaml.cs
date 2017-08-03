@@ -73,7 +73,7 @@ namespace 轻小说文库 {
 				parameters.Add(readLinkage);
 				MainPage.ProgressRing.IsActive = true;
 				MainPage.ProgressRing.Visibility = Windows.UI.Xaml.Visibility.Visible;
-				MainPage.ContentFrame.Navigate(typeof(ChapterIndexPage), parameters);
+				this.Frame.Navigate(typeof(ChapterIndexPage), parameters);
 			}
 		}
 	}

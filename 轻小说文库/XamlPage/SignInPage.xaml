@@ -30,7 +30,7 @@
                     <PasswordBox x:Name="passwordPasswordBox" BorderThickness="0" Width="152" HorizontalContentAlignment="Left" Password=""/>
                 </StackPanel>
             </Border>
-            <Button Grid.Row="5" x:Name="signInButton" Content="登陆" Background="{StaticResource AppThemeColor}" Height="32" Width="200" Click="signInButton_ClickAsync"/>
+            <Button Grid.Row="5" x:Name="signInButton" Content="登陆" Background="{StaticResource AppThemeColor}" Height="32" Width="200" Click="SignInButton_ClickAsync"/>
         </Grid>
     </Grid>
 </Page>
