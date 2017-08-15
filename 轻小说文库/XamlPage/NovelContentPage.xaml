@@ -15,12 +15,12 @@
                    Stretch="UniformToFill"/>
         </DataTemplate>
     </Page.Resources>
-    <Grid>
+    <Grid >
         <Image Source="Assets\background.jpg" Stretch="Fill"/>
-        <ScrollViewer x:Name="novelContentScrollViewer" VerticalScrollBarVisibility="Auto">
-            <TextBlock x:Name="novelContentTextBlock" TextWrapping="Wrap" Margin="12"/>
+        <ScrollViewer x:Name="novelContentScrollViewer" VerticalScrollBarVisibility="Auto"  KeyDown="OnUpKeyDown">
+            <TextBlock x:Name="novelContentTextBlock" TextWrapping="Wrap" Margin="12" />
         </ScrollViewer>
-        <ListView x:Name="illustrationsListView" ScrollViewer.VerticalScrollBarVisibility="Auto"
-                  ItemTemplate="{StaticResource IllustrationViewTemplate}" />
+        <ListView x:Name="illustrationsListView" ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                  ItemTemplate="{StaticResource IllustrationViewTemplate}"/>
     </Grid>
 </Page>

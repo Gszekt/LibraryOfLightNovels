@@ -108,7 +108,12 @@ namespace 轻小说文库 {
 				MainPage.ProgressRing.Visibility = Windows.UI.Xaml.Visibility.Visible;
 			}
 		}
-
+		
+		/// <summary>
+		/// BookItem的点击响应
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void BookItemsGridView_ItemClick(object sender, ItemClickEventArgs e) {
 			if (e.ClickedItem is BookItem) {
 				this.Frame.Navigate(typeof(BookDetalsPage), e.ClickedItem);

@@ -24,8 +24,7 @@ namespace 轻小说文库 {
 				foreach (var trNode in tableNode.Descendants("tr")) {
 					if (trNode.ChildNodes.Count < 4) {
 						bookIndex = new BookIndex();
-						var stringSplits = trNode.InnerText.Split(' ');
-						bookIndex.VolumnTitle = stringSplits[4].Trim();
+						bookIndex.VolumnTitle = trNode.InnerText.Trim();
 						bookIndexes.Add(bookIndex);
 					}
 					else {

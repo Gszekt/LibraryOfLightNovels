@@ -31,7 +31,7 @@ namespace 轻小说文库 {
 			ProgressRing = progressBar;
 			CheckIdAndNameAsync();
 
-			this.AddHandler(KeyDownEvent, new KeyEventHandler(BackKeysDown), true);
+			//this.AddHandler(KeyDownEvent, new KeyEventHandler(OnBackKeyDown), true);
 		}
 
 		/// <summary>
@@ -39,7 +39,7 @@ namespace 轻小说文库 {
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void BackKeysDown(object sender, KeyRoutedEventArgs e) {
+		private void OnBackKeyDown(object sender, KeyRoutedEventArgs e) {
 			if (e.Key is Windows.System.VirtualKey.Back && splitViewContentFrame.CanGoBack) {
 				ProgressRing.IsActive = true;
 				ProgressRing.Visibility = Visibility.Visible;

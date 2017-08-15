@@ -7,9 +7,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     NavigationCacheMode="Required">
+
     <Page.Resources>
         <DataTemplate x:Key="BookItemViewTemplate" x:DataType="local:BookItem">
-            <Grid HorizontalAlignment="Left" Height="160" Padding="16,2,0,0">  
+            <Grid HorizontalAlignment="Left" Height="160" Padding="16,2,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="12"/>
@@ -47,7 +48,7 @@
         </DataTemplate>
     </Page.Resources>
     <ScrollViewer x:Name="BookItemsScrollViewer"  VerticalScrollBarVisibility="Auto" ViewChanged="BookItemsScrollViewer_ViewChanged">
-        <ListView x:Name="BookItemsGridView" ItemsSource="{x:Bind BookItems}" ItemTemplate="{StaticResource BookItemViewTemplate}" 
-                  IsItemClickEnabled="True" ItemClick="BookItemsGridView_ItemClick"/> <!--ItemContainerStyle="{StaticResource GridViewItemStyle}"-->
+        <GridView x:Name="BookItemsGridView" ItemsSource="{x:Bind BookItems}" ItemTemplate="{StaticResource BookItemViewTemplate}" 
+                  IsItemClickEnabled="True" ItemClick="BookItemsGridView_ItemClick" ItemContainerStyle="{StaticResource GridViewItemStyle}"/>
     </ScrollViewer>
 </Page>
