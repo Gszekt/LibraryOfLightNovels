@@ -21,6 +21,7 @@ namespace 轻小说文库 {
 		}
 
 		protected override async void OnNavigatedTo(NavigationEventArgs e) {
+			//MainPage.ContentFrame.
 			if (e.NavigationMode == NavigationMode.New) {
 				var button = e.Parameter as Button;
 				switch (button.Name) {

@@ -1,9 +1,10 @@
 ﻿using HtmlAgilityPack;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace 轻小说文库 {
 	public class BookItemParser {
+		private static HtmlDocument htmlDoc1;
+		private static HtmlDocument htmlDoc2;
 		private static BookItemParser instance;
 		/// <summary>
 		/// 获取一个BookItemParser的实例
@@ -16,11 +17,15 @@ namespace 轻小说文库 {
 				return instance;
 			}
 		}
-		private BookItemParser() { }
+
+		private BookItemParser() {
+			htmlDoc1 = new HtmlDocument();
+			htmlDoc2 = new HtmlDocument();
+		}
+
 		public void GetBookItems(string htmlPage, ObservableCollection<BookItem> bookItems, string kind) {
-			var htmlDoc = new HtmlDocument();
-			htmlDoc.LoadHtml(htmlPage);
-			var contentNodes = htmlDoc.GetElementbyId("content");
+			htmlDoc1.LoadHtml(htmlPage);
+			var contentNodes = htmlDoc1.GetElementbyId("content");
 			HtmlNode targetNode = null;
 			foreach (var item in contentNodes.Elements("table")) {
 				if (item.GetAttributeValue("class", "f") == "grid") {
@@ -35,9 +40,14 @@ namespace 轻小说文库 {
 			}
 		}
 
-		private static async void SpecialGetBookItemsAsync(ObservableCollection<BookItem> bookItems, HtmlNode targetNode) {
-			foreach (var trNode in targetNode.Descendants("tr")) {
-				foreach (var tdNode in trNode.Descendants("td")) {
+		/// <summary>
+		/// 获取收藏的书籍
+		/// </summary>
+		/// <param name="bookItems">保存书籍的列表</param>
+		/// <param name="targetNode">HTML源码</param>
+		private async void SpecialGetBookItemsAsync(ObservableCollection<BookItem> bookItems, HtmlNode targetNode) {
+			foreach (var tr1Node in targetNode.Descendants("tr")) {
+				foreach (var tdNode in tr1Node.Descendants("td")) {
 					if (tdNode.GetAttributeValue("class", "f") == "even") {
 						foreach (var aNode in tdNode.Descendants("a")) {
 							string href = aNode.GetAttributeValue("href", "f");
@@ -45,6 +55,31 @@ namespace 轻小说文库 {
 								Interlinkage = href,
 								Title = aNode.InnerText.Split('(')[0].Replace("\r\n", " ").Trim(),
 							};
+
+							var htmlPage = await HTMLParser.Instance.GetHtml(bookItem.Interlinkage);
+							if (htmlPage == null) {
+								MainPage.TipsTextBlock.Text = "网络或服务器故障！";
+								MainPage.TipsStackPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
+							}
+							else {
+								htmlDoc2.LoadHtml(htmlPage);
+								var contentNodes = htmlDoc2.GetElementbyId("content");
+								var tableNodes = contentNodes.Descendants("table");
+								foreach (var tableNode in tableNodes) {
+									//应对某些属性没有的情况，比如甘城光辉游乐园没有最近更新
+									var tr2Node = tableNode.ChildNodes[3];
+									try { bookItem.Classification = tr2Node.ChildNodes[1].InnerText; } catch { bookItem.Classification = "文库分类："; }
+									try { bookItem.Author = tr2Node.ChildNodes[3].InnerText; } catch { bookItem.Author = "小说作者："; }
+									try { bookItem.State = tr2Node.ChildNodes[5].InnerText; } catch { bookItem.State = "文章状态："; }
+									try { bookItem.LastUpdate = tr2Node.ChildNodes[7].InnerText; } catch { bookItem.LastUpdate = "最后更新："; }
+									break;
+								}
+								foreach (var imgNode in contentNodes.ChildNodes[1].ChildNodes[7].Descendants("img")) {
+									bookItem.CoverUri = imgNode.Attributes["src"].Value;
+									break;
+								}
+							}
+
 							bookItems.Add(bookItem);
 							break;
 						}
@@ -52,35 +87,14 @@ namespace 轻小说文库 {
 					}
 				}
 			}
-			foreach (var bookItem in bookItems) {
-				var htmlPage = await HTMLParser.Instance.GetHtml(bookItem.Interlinkage);
-				if (htmlPage == null) {
-					MainPage.TipsTextBlock.Text = "网络或服务器故障！";
-					MainPage.TipsStackPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
-				}
-				else {
-					var htmlDoc = new HtmlDocument();
-					htmlDoc.LoadHtml(htmlPage);
-					var contentNodes = htmlDoc.GetElementbyId("content");
-					var tableNodes = contentNodes.Descendants("table");
-					foreach (var tableNode in tableNodes) {
-						//应对某些属性没有的情况，比如甘城光辉游乐园没有最近更新
-						var trNode = tableNode.ChildNodes[3];
-						try { bookItem.Classification = trNode.ChildNodes[1].InnerText; } catch { bookItem.Classification = "文库分类："; }
-						try { bookItem.Author = trNode.ChildNodes[3].InnerText; } catch { bookItem.Author = "小说作者："; }
-						try { bookItem.State = trNode.ChildNodes[5].InnerText; } catch { bookItem.State = "文章状态："; }
-						try { bookItem.LastUpdate = trNode.ChildNodes[7].InnerText; } catch { bookItem.LastUpdate = "最后更新："; }
-						break;
-					}
-					foreach (var imgNode in contentNodes.ChildNodes[1].ChildNodes[7].Descendants("img")) {
-						bookItem.CoverUri = imgNode.Attributes["src"].Value;
-						break;
-					}
-				}
-			}
 		}
 
-		private static void NormalGetBookItems(ObservableCollection<BookItem> bookItems, HtmlNode targetNode) {
+		/// <summary>
+		/// 获取书籍
+		/// </summary>
+		/// <param name="bookItems">保存书籍的列表</param>
+		/// <param name="targetNode">HTML源码</param>
+		private void NormalGetBookItems(ObservableCollection<BookItem> bookItems, HtmlNode targetNode) {
 			foreach (var tdNode in targetNode.Descendants("td"))//此层循环只循环一次
 			{
 				foreach (var node in tdNode.ChildNodes) {
@@ -97,7 +111,6 @@ namespace 轻小说文库 {
 						bookItem.LastUpdate = temps[0];//最近更新
 						bookItem.Summary = node.ChildNodes[3].ChildNodes[7].InnerText;
 						bookItems.Add(bookItem);
-
 					}
 				}
 			}

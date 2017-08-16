@@ -9,7 +9,7 @@
     NavigationCacheMode="Required">
     <Page.Resources>
         <DataTemplate x:Key="BookItemViewTemplate" x:DataType="local:BookItem">
-            <Grid HorizontalAlignment="Left" Height="160" Padding="16,2,0,0">  
+            <Grid HorizontalAlignment="Left" Height="160" Padding="4,2,0,0">  
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="12"/>

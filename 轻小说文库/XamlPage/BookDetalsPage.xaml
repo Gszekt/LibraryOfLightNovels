@@ -67,7 +67,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <Grid x:Name="bookDetailsGrid" Grid.ColumnSpan="2" HorizontalAlignment="Center" Padding="8,2,0,0" Margin="8">
+            <Grid x:Name="bookDetailsGrid" Grid.ColumnSpan="2" HorizontalAlignment="Center" Padding="8,2,0,0" Margin="8" DataContext="{x:Bind Bookitem}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="24"/>

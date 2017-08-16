@@ -43,7 +43,7 @@ namespace 轻小说文库 {
 					Bookitem.ReadLinkage = readLinkage;
 
 					summaryTextBlock.Text = Bookitem.Summary;
-					bookDetailsGrid.DataContext = Bookitem;
+					//bookDetailsGrid.DataContext = Bookitem;
 
 					htmlPage = await HTMLParser.Instance.GetHtml(Bookitem.ReadLinkage);
 					if (htmlPage == null) {

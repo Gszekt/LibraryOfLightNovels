@@ -19,6 +19,7 @@ namespace 轻小说文库 {
 		public static TextBlock TipsTextBlock { get; set; }
 		public static StackPanel TipsStackPanel { get; set; }
 		public static ProgressRing ProgressRing { get; set; }
+		private string currentBookClassification;
 
 		public MainPage() {
 			this.InitializeComponent();
@@ -31,7 +32,7 @@ namespace 轻小说文库 {
 			ProgressRing = progressBar;
 			CheckIdAndNameAsync();
 
-			//this.AddHandler(KeyDownEvent, new KeyEventHandler(OnBackKeyDown), true);
+			this.AddHandler(KeyDownEvent, new KeyEventHandler(OnBackKeyDown), true);
 		}
 
 		/// <summary>
@@ -63,6 +64,7 @@ namespace 轻小说文库 {
 				if (await HTMLParser.SetHttpClientInstanceAsync(userName, password)) {
 					ProgressRing.IsActive = true;
 					ProgressRing.Visibility = Visibility.Visible;
+					currentBookClassification = "updatedNovelsButton";
 					ContentFrame.Navigate(typeof(BookItemsPage), new Button { Name = "updatedNovelsButton" });
 				}
 				else {
@@ -90,9 +92,14 @@ namespace 轻小说文库 {
 			if (Window.Current.Bounds.Width <= 1200) {
 				menuSplitView.IsPaneOpen = false;
 			}
-			MainPage.ProgressRing.IsActive = true;
-			MainPage.ProgressRing.Visibility = Visibility.Visible;
-			splitViewContentFrame.Navigate(typeof(BookItemsPage), sender);
+			if ((sender as Button).Name != currentBookClassification) {
+				MainPage.ProgressRing.IsActive = true;
+				MainPage.ProgressRing.Visibility = Visibility.Visible;
+				splitViewContentFrame.Navigate(typeof(BookItemsPage), sender);
+				MainPage.ContentFrame.BackStack.Clear();
+				SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
+				currentBookClassification = (sender as Button).Name;
+			}
 		}
 
 		/// <summary>
