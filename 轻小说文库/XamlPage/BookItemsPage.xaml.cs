@@ -69,18 +69,17 @@ namespace 轻小说文库 {
 				if (htmlPage == null) {
 					MainPage.TipsTextBlock.Text = "网络或服务器故障！";
 					MainPage.TipsStackPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
+					return;
 				}
-				else {
-					try {
-						BookItems.Clear();
-						BookItemParser.Instance.GetBookItems(htmlPage, BookItems, kind);
-						MainPage.ProgressRing.IsActive = false;
-						MainPage.ProgressRing.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-					}
-					catch (System.Exception) {
-						MainPage.TipsTextBlock.Text = "出错！";
-						MainPage.TipsStackPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
-					}
+				try {
+					BookItems.Clear();
+					BookItemParser.Instance.GetBookItems(htmlPage, BookItems, kind);
+					MainPage.ProgressRing.IsActive = false;
+					MainPage.ProgressRing.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+				}
+				catch (System.Exception) {
+					MainPage.TipsTextBlock.Text = "出错！";
+					MainPage.TipsStackPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
 				}
 			}
 			else if (e.NavigationMode == NavigationMode.Back) {
@@ -109,12 +108,8 @@ namespace 轻小说文库 {
 				MainPage.ProgressRing.Visibility = Windows.UI.Xaml.Visibility.Visible;
 			}
 		}
-		
-		/// <summary>
-		/// BookItem的点击响应
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
+
+		// BookItem的点击响应
 		private void BookItemsGridView_ItemClick(object sender, ItemClickEventArgs e) {
 			if (e.ClickedItem is BookItem) {
 				this.Frame.Navigate(typeof(BookDetalsPage), e.ClickedItem);
@@ -123,6 +118,8 @@ namespace 轻小说文库 {
 			}
 		}
 	}
+
+	// 
 	public class BookClassificationURI {
 		public static string hotNovelsURI = "http://www.wenku8.com/modules/article/toplist.php?sort=allvisit";
 		public static string animatedNovelsURI = "http://www.wenku8.com/modules/article/toplist.php?sort=anime";

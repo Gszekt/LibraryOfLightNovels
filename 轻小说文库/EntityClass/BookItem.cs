@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace 轻小说文库 {
 	public class BookItem : INotifyPropertyChanged {
@@ -12,7 +13,7 @@ namespace 轻小说文库 {
 		private string author;
 		private string classfication;
 		private string state;
-		private string coverUri;
+		private BitmapImage cover;
 		private string lastUpdate;
 		private string interLinkage;
 		private string summary;
@@ -38,9 +39,9 @@ namespace 轻小说文库 {
 			set { SetProperty(ref state, value); }
 		}
 
-		public string CoverUri {
-			get { return coverUri; }
-			set { SetProperty(ref coverUri, value); }
+		public BitmapImage Cover {
+			get { return cover; }
+			set { SetProperty(ref cover, value); }
 		}
 
 		public string LastUpdate {

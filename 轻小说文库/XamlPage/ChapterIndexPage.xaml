@@ -12,5 +12,5 @@
 
     </Grid>-->
     <ListView x:Name="chapterIndexListView" Grid.Column="1" DisplayMemberPath="ChapterTitle" ScrollViewer.VerticalScrollBarVisibility="Auto"
-              IsItemClickEnabled="True" ItemClick="chapterIndexListView_ItemClickAsync"/>
+              IsItemClickEnabled="True" ItemClick="ChapterIndexListView_ItemClick"/>
 </Page>

@@ -10,7 +10,7 @@
 
     <Page.Resources>
         <DataTemplate x:Key="BookItemViewTemplate" x:DataType="local:BookItem">
-            <Grid HorizontalAlignment="Left" Height="160" Padding="16,2,0,0">
+            <Grid HorizontalAlignment="Left" Height="160" Padding="16,2,4,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="12"/>
@@ -34,7 +34,7 @@
                         <Setter Property="VerticalAlignment" Value="Top"/>
                     </Style>
                 </Grid.Resources>
-                <Image Grid.RowSpan="7" Source="{Binding CoverUri,Converter={StaticResource u2i}}" Width="100" HorizontalAlignment="Left"/>
+                <Image Grid.RowSpan="7" Source="{Binding Cover}" Width="100" HorizontalAlignment="Left"/>
                 <TextBlock Grid.Column="2" Grid.ColumnSpan="3" Text="{Binding Title}" TextWrapping="Wrap" VerticalAlignment="Bottom"/>
                 <TextBlock Grid.Row="2" Grid.Column="2" Text="&#xE13D;" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Bottom"/>
                 <TextBlock Grid.Row="2" Grid.Column="4" Text="{x:Bind Author}" TextWrapping="Wrap"/>

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="9697de55-d5f9-4d8e-aea3-1f047a6e97a3" Publisher="CN=23925" Version="1.0.2.0" />
+  <Identity Name="9697de55-d5f9-4d8e-aea3-1f047a6e97a3" Publisher="CN=23925" Version="1.0.3.0" />
   <mp:PhoneIdentity PhoneProductId="9697de55-d5f9-4d8e-aea3-1f047a6e97a3" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>轻小说文库</DisplayName>
@@ -28,5 +28,7 @@
   </Applications>
   <Capabilities>
     <Capability Name="internetClient" />
+    <uap:Capability Name="removableStorage" />
+    <uap:Capability Name="picturesLibrary" />
   </Capabilities>
 </Package>

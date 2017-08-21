@@ -33,7 +33,7 @@
                         <Setter Property="VerticalAlignment" Value="Top"/>
                     </Style>
                 </Grid.Resources>
-                <Image Grid.RowSpan="7" Source="{Binding CoverUri,Converter={StaticResource u2i}}" Width="100" HorizontalAlignment="Left"/>
+                <Image Grid.RowSpan="7" Source="{Binding Cover}" Width="100" HorizontalAlignment="Left"/>
                 <TextBlock Grid.Column="2" Grid.ColumnSpan="3" Text="{Binding Title}" TextWrapping="Wrap" VerticalAlignment="Bottom"/>
                 <TextBlock Grid.Row="2" Grid.Column="2" Text="&#xE13D;" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Bottom"/>
                 <TextBlock Grid.Row="2" Grid.Column="4" Text="{x:Bind Author}" TextWrapping="Wrap"/>

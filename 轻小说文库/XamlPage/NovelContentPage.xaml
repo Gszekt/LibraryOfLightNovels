@@ -11,8 +11,7 @@
     <Page.Resources>
         <local:CoverUriToCoverImageConverter x:Key="u2i"/>
         <DataTemplate x:Key="IllustrationViewTemplate">
-            <Image Source="{Binding ImageUri,Converter={StaticResource u2i}}" 
-                   Stretch="UniformToFill"/>
+            <Image Source="{Binding Image}" Stretch="UniformToFill"/>
         </DataTemplate>
     </Page.Resources>
     <Grid >
@@ -20,7 +19,7 @@
         <ScrollViewer x:Name="novelContentScrollViewer" VerticalScrollBarVisibility="Auto"  KeyDown="OnUpKeyDown">
             <TextBlock x:Name="novelContentTextBlock" TextWrapping="Wrap" Margin="12" />
         </ScrollViewer>
-        <ListView x:Name="illustrationsListView" ScrollViewer.VerticalScrollBarVisibility="Auto" 
-                  ItemTemplate="{StaticResource IllustrationViewTemplate}"/>
+        <ListView x:Name="illustrationsListView" ScrollViewer.VerticalScrollBarVisibility="Auto"
+                  ItemTemplate="{StaticResource IllustrationViewTemplate}" ItemsSource="{x:Bind Illustrations}"/>
     </Grid>
 </Page>

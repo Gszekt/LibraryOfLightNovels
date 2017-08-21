@@ -90,7 +90,7 @@
                         <Setter Property="FontSize" Value="14"/>
                     </Style>
                 </Grid.Resources>
-                <Image Grid.RowSpan="7" Source="{Binding CoverUri,Converter={StaticResource u2i}}" Width="120" HorizontalAlignment="Left"/>
+                <Image Grid.RowSpan="7" Source="{Binding Cover}" Width="120" HorizontalAlignment="Left"/>
                 <TextBlock Grid.Row="1" Grid.Column="2" Text="&#xE13D;" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Bottom" />
                 <TextBlock Grid.Row="1" Grid.Column="4" Text="{Binding Author}" TextWrapping="Wrap" />
                 <TextBlock Grid.Row="2" Grid.Column="2" Text="&#xE1CB;"  FontFamily="Segoe MDL2 Assets" VerticalAlignment="Bottom"/>

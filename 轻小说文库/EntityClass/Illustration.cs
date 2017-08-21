@@ -3,6 +3,6 @@ namespace 轻小说文库
 {
     public class Illustration
     {
-        public string ImageUri { get; set; }
+        public Windows.UI.Xaml.Media.Imaging.BitmapImage Image { get; set; }
     }
 }

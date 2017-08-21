@@ -19,7 +19,7 @@
     <PackageCertificateKeyFile>轻小说文库_TemporaryKey.pfx</PackageCertificateKeyFile>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
-    <AppxBundlePlatforms>x86|x64</AppxBundlePlatforms>
+    <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -98,6 +98,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ParserClass\ImageHelper.cs" />
     <Compile Include="XamlPage\BookDetalsPage.xaml.cs">
       <DependentUpon>BookDetalsPage.xaml</DependentUpon>
     </Compile>
@@ -114,7 +115,7 @@
     <Compile Include="CoverUriToCoverImageConverter.cs" />
     <Compile Include="ParserClass\HTMLParser.cs" />
     <Compile Include="EntityClass\Illustration.cs" />
-    <Compile Include="ParserClass\IllustrationParser.cs" />
+    <Compile Include="ParserClass\IllustrationUriParser.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>

@@ -1,5 +1,6 @@
 ﻿using HtmlAgilityPack;
 using System.Collections.ObjectModel;
+using 轻小说文库.ParserClass;
 
 namespace 轻小说文库 {
 	public class BookItemParser {
@@ -33,7 +34,7 @@ namespace 轻小说文库 {
 				}
 			}
 			if (kind == "normal") {
-				NormalGetBookItems(bookItems, targetNode);
+				NormalGetBookItemsAsync(bookItems, targetNode);
 			}
 			else if (kind == "special") {
 				SpecialGetBookItemsAsync(bookItems, targetNode);
@@ -75,7 +76,8 @@ namespace 轻小说文库 {
 									break;
 								}
 								foreach (var imgNode in contentNodes.ChildNodes[1].ChildNodes[7].Descendants("img")) {
-									bookItem.CoverUri = imgNode.Attributes["src"].Value;
+									var coverUri = imgNode.Attributes["src"].Value;
+									bookItem.Cover = await ImageHelper.GetImage(new System.Uri(coverUri), "cover");
 									break;
 								}
 							}
@@ -94,12 +96,14 @@ namespace 轻小说文库 {
 		/// </summary>
 		/// <param name="bookItems">保存书籍的列表</param>
 		/// <param name="targetNode">HTML源码</param>
-		private void NormalGetBookItems(ObservableCollection<BookItem> bookItems, HtmlNode targetNode) {
+		private async void NormalGetBookItemsAsync(ObservableCollection<BookItem> bookItems, HtmlNode targetNode) {
 			foreach (var tdNode in targetNode.Descendants("td"))//此层循环只循环一次
 			{
 				foreach (var node in tdNode.ChildNodes) {
 					if (node.Name == "div") {
-						var bookItem = new BookItem() { CoverUri = node.ChildNodes[1].ChildNodes[1].ChildNodes[1].Attributes["src"].Value };
+						var bookItem = new BookItem();
+						var coverUri = node.ChildNodes[1].ChildNodes[1].ChildNodes[1].Attributes["src"].Value;
+						bookItem.Cover = await ImageHelper.GetImage(new System.Uri(coverUri), "cover");
 						var temps = node.ChildNodes[1].ChildNodes[1].Attributes["title"].Value.Split('(');
 						bookItem.Title = temps[0].Replace("\r\n", " ").Trim();//标题
 						bookItem.Interlinkage = node.ChildNodes[1].ChildNodes[1].Attributes["href"].Value;
