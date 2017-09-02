@@ -9,7 +9,6 @@
     NavigationCacheMode="Required">
 
     <Page.Resources>
-        <local:CoverUriToCoverImageConverter x:Key="u2i"/>
         <DataTemplate x:Key="IllustrationViewTemplate">
             <Image Source="{Binding Image}" Stretch="UniformToFill"/>
         </DataTemplate>

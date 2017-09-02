@@ -1,6 +1,8 @@
-﻿using Windows.Storage;
+﻿using System;
+using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Core;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -16,16 +18,12 @@ namespace 轻小说文库 {
 		public static Frame ContentFrame { get; set; }
 		public static TextBlock TitleTextBlock { get; set; }
 		public static SplitView MainSplitView { get; set; }
-		public static TextBlock TipsTextBlock { get; set; }
-		public static StackPanel TipsStackPanel { get; set; }
 		public static ProgressRing ProgressRing { get; set; }
 		private string currentBookClassification;
 
 		public MainPage() {
 			this.InitializeComponent();
 
-			TipsStackPanel = tipsStackPanel;
-			TipsTextBlock = tipsTextBlock;
 			MainSplitView = menuSplitView;
 			ContentFrame = splitViewContentFrame;
 			TitleTextBlock = titleTextBlock;
@@ -38,8 +36,6 @@ namespace 轻小说文库 {
 		/// <summary>
 		/// 处理键盘退格键，返回上一页
 		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
 		private void OnBackKeyDown(object sender, KeyRoutedEventArgs e) {
 			if (e.Key is Windows.System.VirtualKey.Back && splitViewContentFrame.CanGoBack) {
 				ProgressRing.IsActive = true;
@@ -68,10 +64,22 @@ namespace 轻小说文库 {
 					ContentFrame.Navigate(typeof(BookItemsPage), new Button { Name = "updatedNovelsButton" });
 				}
 				else {
-					TipsTextBlock.Text = "网络或服务器故障！";
-					TipsStackPanel.Visibility = Visibility.Visible;
+					await PopMessageDialog("网络或服务器故障！");
 				}
 			}
+		}
+
+		public static async System.Threading.Tasks.Task PopMessageDialog(string message) {
+			var dialog = new ContentDialog() {
+				Content = message,
+				IsPrimaryButtonEnabled = true,
+				PrimaryButtonText = "确定",
+				FullSizeDesired = false,
+				Background = new Windows.UI.Xaml.Media.SolidColorBrush(Color.FromArgb(191, 243, 243, 248)),
+				BorderThickness= new Thickness(0.0)
+				
+			};
+			await dialog.ShowAsync();
 		}
 
 		/// <summary>
@@ -120,9 +128,5 @@ namespace 轻小说文库 {
 
 		}
 
-		private void Button_Click(object sender, RoutedEventArgs e) {
-			TipsTextBlock.Text = "";
-			TipsStackPanel.Visibility = Visibility.Collapsed;
-		}
 	}
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
@@ -21,37 +22,36 @@ namespace 轻小说文库 {
 		}
 
 		protected override async void OnNavigatedTo(NavigationEventArgs e) {
-			//MainPage.ContentFrame.
 			if (e.NavigationMode == NavigationMode.New) {
 				var button = e.Parameter as Button;
 				switch (button.Name) {
 					case "hotNovelsButton":
-						RequestURI = BookClassificationURI.hotNovelsURI;
+						RequestURI = BaseURIs.hotNovelsURI;
 						kind = "normal";
 						localTitle = MainPage.TitleTextBlock.Text = "热门轻小说";
 						break;
 					case "animatedNovelsButton":
-						RequestURI = BookClassificationURI.animatedNovelsURI;
+						RequestURI = BaseURIs.animatedNovelsURI;
 						kind = "normal";
 						localTitle = MainPage.TitleTextBlock.Text = "动画化作品";
 						break;
 					case "updatedNovelsButton":
-						RequestURI = BookClassificationURI.updatedNovelsURI;
+						RequestURI = BaseURIs.updatedNovelsURI;
 						kind = "normal";
 						localTitle = MainPage.TitleTextBlock.Text = "今日更新";
 						break;
 					case "newNovelsButton":
-						RequestURI = BookClassificationURI.newNovelsURI;
+						RequestURI = BaseURIs.newNovelsURI;
 						kind = "normal";
 						localTitle = MainPage.TitleTextBlock.Text = "新书一览";
 						break;
 					case "completeNovelsButton":
-						RequestURI = BookClassificationURI.completeNovelsURI;
+						RequestURI = BaseURIs.completeNovelsURI;
 						kind = "normal";
 						localTitle = MainPage.TitleTextBlock.Text = "完结全本";
 						break;
 					case "favouriteNovelsButton":
-						RequestURI = BookClassificationURI.favouriteNovelsURI;
+						RequestURI = BaseURIs.favouriteNovelsURI;
 						kind = "special";
 						localTitle = MainPage.TitleTextBlock.Text = "特别收藏";
 						break;
@@ -67,8 +67,7 @@ namespace 轻小说文库 {
 					htmlPage = await HTMLParser.Instance.GetHtml(RequestURI);
 				}
 				if (htmlPage == null) {
-					MainPage.TipsTextBlock.Text = "网络或服务器故障！";
-					MainPage.TipsStackPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
+					await MainPage.PopMessageDialog("网络或服务器故障！");
 					return;
 				}
 				try {
@@ -77,9 +76,8 @@ namespace 轻小说文库 {
 					MainPage.ProgressRing.IsActive = false;
 					MainPage.ProgressRing.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
 				}
-				catch (System.Exception) {
-					MainPage.TipsTextBlock.Text = "出错！";
-					MainPage.TipsStackPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
+				catch (Exception) {
+					await MainPage.PopMessageDialog("网络或服务器故障！");
 				}
 			}
 			else if (e.NavigationMode == NavigationMode.Back) {
@@ -91,14 +89,16 @@ namespace 轻小说文库 {
 
 		bool flag = true;
 		private async void BookItemsScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e) {
+			if (kind == "special") {
+				return;
+			}
 			if (BookItemsScrollViewer.VerticalOffset > BookItemsScrollViewer.ScrollableHeight - 10 && flag) {
 				flag = false;
 				MainPage.ProgressRing.IsActive = true;
 				MainPage.ProgressRing.Visibility = Windows.UI.Xaml.Visibility.Visible;
 				var htmlPage = await HTMLParser.Instance.GetHtml(RequestURI + "&page=" + pageNum++);
 				if (htmlPage == null) {
-					MainPage.TipsTextBlock.Text = "网络或服务器故障！";
-					MainPage.TipsStackPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
+					await MainPage.PopMessageDialog("网络或服务器故障！");
 				}
 				else {
 					BookItemParser.Instance.GetBookItems(htmlPage, BookItems, "normal");
@@ -119,13 +119,17 @@ namespace 轻小说文库 {
 		}
 	}
 
-	// 
-	public class BookClassificationURI {
+	// 程序中用到的所有URI
+	public class BaseURIs {
 		public static string hotNovelsURI = "http://www.wenku8.com/modules/article/toplist.php?sort=allvisit";
 		public static string animatedNovelsURI = "http://www.wenku8.com/modules/article/toplist.php?sort=anime";
 		public static string updatedNovelsURI = "http://www.wenku8.com/modules/article/toplist.php?sort=lastupdate";
 		public static string newNovelsURI = "http://www.wenku8.com/modules/article/toplist.php?sort=postdate";
 		public static string completeNovelsURI = "http://www.wenku8.com/modules/article/articlelist.php?fullflag=1";
 		public static string favouriteNovelsURI = "http://www.wenku8.com/modules/article/bookcase.php";
+
+		public static string collectNovelURI = "http://www.wenku8.com/modules/article/addbookcase.php?bid=";
+		public static string deleteNovelURI = "http://www.wenku8.com/modules/article/bookcase.php?delid=";
+		public static string voteNovelURI = "http://www.wenku8.com/modules/article/uservote.php?id=";
 	}
 }

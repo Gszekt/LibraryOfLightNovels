@@ -67,21 +67,22 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <Grid x:Name="bookDetailsGrid" Grid.ColumnSpan="2" HorizontalAlignment="Center" Padding="8,2,0,0" Margin="8" DataContext="{x:Bind Bookitem}">
+            <Grid x:Name="bookDetailsGrid" Grid.ColumnSpan="2" HorizontalAlignment="Center" Padding="8,2,0,0" Margin="8" Height="200">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="120"/>
                     <ColumnDefinition Width="24"/>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="16"/>
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition />
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="16"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="8"/>
+                    <RowDefinition Height="8"/>
                 </Grid.RowDefinitions>
                 <Grid.Resources>
                     <Style TargetType="TextBlock">
@@ -90,26 +91,32 @@
                         <Setter Property="FontSize" Value="14"/>
                     </Style>
                 </Grid.Resources>
-                <Image Grid.RowSpan="7" Source="{Binding Cover}" Width="120" HorizontalAlignment="Left"/>
-                <TextBlock Grid.Row="1" Grid.Column="2" Text="&#xE13D;" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Bottom" />
-                <TextBlock Grid.Row="1" Grid.Column="4" Text="{Binding Author}" TextWrapping="Wrap" />
+                <Image Grid.RowSpan="6" Source="{Binding Cover}" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <TextBlock Grid.Row="0" Grid.Column="2" Text="&#xE13D;" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Bottom" />
+                <TextBlock Grid.Row="0" Grid.Column="4" Text="{Binding Author}" TextWrapping="Wrap" />
+                <TextBlock Grid.Row="1" Grid.Column="2" Text="&#xE1CB;"  FontFamily="Segoe MDL2 Assets" VerticalAlignment="Bottom"/>
+                <TextBlock Grid.Row="1" Grid.Column="4" Text="{Binding Classification}" TextWrapping="Wrap" />
                 <TextBlock Grid.Row="2" Grid.Column="2" Text="&#xE1CB;"  FontFamily="Segoe MDL2 Assets" VerticalAlignment="Bottom"/>
-                <TextBlock Grid.Row="2" Grid.Column="4" Text="{Binding Classification}" TextWrapping="Wrap" />
-                <TextBlock Grid.Row="3" Grid.Column="2" Text="&#xE1CB;"  FontFamily="Segoe MDL2 Assets" VerticalAlignment="Bottom"/>
-                <TextBlock Grid.Row="3" Grid.Column="4" Text="{Binding State}" TextWrapping="Wrap" />
-                <TextBlock Grid.Row="4" Grid.Column="2" Text="&#xE121;"  FontFamily="Segoe MDL2 Assets" VerticalAlignment="Bottom"/>
-                <TextBlock Grid.Row="4" Grid.Column="4" Text="{Binding LastUpdate}" TextWrapping="Wrap" />
+                <TextBlock Grid.Row="2" Grid.Column="4" Text="{Binding State}" TextWrapping="Wrap" />
+                <TextBlock Grid.Row="3" Grid.Column="2" Text="&#xE121;"  FontFamily="Segoe MDL2 Assets" VerticalAlignment="Bottom"/>
+                <TextBlock Grid.Row="3" Grid.Column="4" Text="{Binding LastUpdate}" TextWrapping="Wrap" />
+                <StackPanel Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="3" Orientation="Horizontal">
+                    <Button x:Name="CollectButton" Content="添加收藏" Background="{StaticResource AppThemeColor}" Click="CollectButton_Click"/>
+                    <Button x:Name="RecommendButton" Content="推荐本书" Margin="8" Click="RecommendButton_Click"/>
+                </StackPanel>
             </Grid>
             <Border x:Name="summaryBorder" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Padding="16" BorderBrush="LightGray" BorderThickness="0,1">
                 <TextBlock x:Name="summaryTextBlock" TextWrapping="Wrap" MaxWidth="600" VerticalAlignment="Center"/>
-            </Border><!--ItemContainerStyle="{StaticResource GridViewItemStyle}"-->
+            </Border>
+            <!--ItemContainerStyle="{StaticResource GridViewItemStyle}"-->
             <ListView x:Name="volumnIndexGridView" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" 
                       HorizontalContentAlignment="Left" IsItemClickEnabled="True" ItemClick="VolumnIndexGridView_ItemClick"
                       ItemsSource="{x:Bind BookIndexes}">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="local:BookIndex">
                         <Border>
-                            <TextBlock Text="{Binding VolumnTitle}" HorizontalAlignment="Center" VerticalAlignment="Center" /><!--TextWrapping="Wrap"-->
+                            <TextBlock Text="{Binding VolumnTitle}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            <!--TextWrapping="Wrap"-->
                         </Border>
                     </DataTemplate>
                 </ListView.ItemTemplate>

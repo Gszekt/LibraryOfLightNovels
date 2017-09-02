@@ -1,5 +1,7 @@
 ﻿using HtmlAgilityPack;
+using System;
 using System.Collections.ObjectModel;
+using Windows.Storage;
 using 轻小说文库.ParserClass;
 
 namespace 轻小说文库 {
@@ -47,6 +49,7 @@ namespace 轻小说文库 {
 		/// <param name="bookItems">保存书籍的列表</param>
 		/// <param name="targetNode">HTML源码</param>
 		private async void SpecialGetBookItemsAsync(ObservableCollection<BookItem> bookItems, HtmlNode targetNode) {
+			var collectedNovels = new System.Text.StringBuilder();
 			foreach (var tr1Node in targetNode.Descendants("tr")) {
 				foreach (var tdNode in tr1Node.Descendants("td")) {
 					if (tdNode.GetAttributeValue("class", "f") == "even") {
@@ -56,11 +59,11 @@ namespace 轻小说文库 {
 								Interlinkage = href,
 								Title = aNode.InnerText.Split('(')[0].Replace("\r\n", " ").Trim(),
 							};
-
+							bookItem.DelID = href.Substring(href.LastIndexOf('=') + 1);
+							bookItem.BID = href.Substring(href.IndexOf('=') + 1, href.IndexOf('&') - href.IndexOf('=') - 1);
 							var htmlPage = await HTMLParser.Instance.GetHtml(bookItem.Interlinkage);
 							if (htmlPage == null) {
-								MainPage.TipsTextBlock.Text = "网络或服务器故障！";
-								MainPage.TipsStackPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
+								await MainPage.PopMessageDialog("网络或服务器故障！");
 							}
 							else {
 								htmlDoc2.LoadHtml(htmlPage);
@@ -81,7 +84,7 @@ namespace 轻小说文库 {
 									break;
 								}
 							}
-
+							collectedNovels.Append(bookItem.BID + ";");
 							bookItems.Add(bookItem);
 							break;
 						}
@@ -89,6 +92,12 @@ namespace 轻小说文库 {
 					}
 				}
 			}
+			try {
+				var localFolder = ApplicationData.Current.LocalCacheFolder;
+				var file = await localFolder.CreateFileAsync("collectedNovels.txt", CreationCollisionOption.OpenIfExists);
+				await FileIO.WriteTextAsync(file, collectedNovels.ToString());
+			}
+			catch { }
 		}
 
 		/// <summary>
@@ -107,6 +116,8 @@ namespace 轻小说文库 {
 						var temps = node.ChildNodes[1].ChildNodes[1].Attributes["title"].Value.Split('(');
 						bookItem.Title = temps[0].Replace("\r\n", " ").Trim();//标题
 						bookItem.Interlinkage = node.ChildNodes[1].ChildNodes[1].Attributes["href"].Value;
+						temps = bookItem.Interlinkage.Split('/');
+						bookItem.BID = temps[temps.Length - 1].Remove(temps[temps.Length - 1].Length - 4);
 						temps = node.ChildNodes[3].ChildNodes[3].InnerText.Split('/');
 						bookItem.Author = temps[0];//作者
 						bookItem.Classification = temps[1];//分类

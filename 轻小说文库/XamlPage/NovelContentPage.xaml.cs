@@ -26,8 +26,7 @@ namespace 轻小说文库 {
 			var novelContentUri = e.Parameter as string;
 			var htmlPage = await HTMLParser.Instance.GetHtml(novelContentUri);
 			if (htmlPage == null) {
-				MainPage.TipsTextBlock.Text = "网络或服务器故障！";
-				MainPage.TipsStackPanel.Visibility = Visibility.Visible;
+				await MainPage.PopMessageDialog("网络或服务器故障！");
 				return;
 			}
 

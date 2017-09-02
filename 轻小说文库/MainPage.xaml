@@ -45,13 +45,9 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <Button x:Name="menuButton" Width="48" Height="36" Style="{StaticResource CustomButtonStyle}" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" Click="MenuButton_Click">
-                <!--<Button.Style>
+        <Button x:Name="menuButton" Width="48" Height="36" HorizontalAlignment="Left" Style="{StaticResource CustomButtonStyle}" FontFamily="Segoe MDL2 Assets" 
+                Content="&#xE700;" Click="MenuButton_Click" Canvas.ZIndex="1">
+            <!--<Button.Style>
                     <Style TargetType="Button" BasedOn="{StaticResource CustomButtonStyle}">
                         <Setter Property="Template">
                             <Setter.Value>
@@ -84,14 +80,10 @@
                         </Setter>
                     </Style>
                 </Button.Style>-->
-            </Button>
-            <TextBlock x:Name="titleTextBlock" Grid.Column="1"  HorizontalAlignment="Center" VerticalAlignment="Center" Canvas.ZIndex="0"/>
-            <StackPanel x:Name="tipsStackPanel" Grid.Column="1" Background="White" Orientation="Horizontal" Canvas.ZIndex="1" Visibility="Collapsed" HorizontalAlignment="Center">
-                <TextBlock x:Name="tipsTextBlock" FontSize="14" VerticalAlignment="Center"/>
-                <Button Content="确定" FontSize="12" Background="{StaticResource AppThemeColor}" Click="Button_Click"/>
-            </StackPanel>
-        </Grid>
-        <SplitView x:Name="menuSplitView" Grid.Row="1" CompactPaneLength="48" OpenPaneLength="280" DisplayMode="CompactOverlay" PaneBackground="#BFF3F3F5">
+        </Button>
+        <TextBlock x:Name="titleTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" Canvas.ZIndex="0"/>
+        <SplitView x:Name="menuSplitView" Grid.Row="1" CompactPaneLength="48" OpenPaneLength="280" DisplayMode="CompactOverlay" 
+                   PaneBackground="#BFF3F3F8">
             <SplitView.Pane>
                 <Grid >
                     <Grid.Resources>

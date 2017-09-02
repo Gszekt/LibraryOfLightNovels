@@ -9,13 +9,13 @@
     NavigationCacheMode="Required">
     <Page.Resources>
         <DataTemplate x:Key="BookItemViewTemplate" x:DataType="local:BookItem">
-            <Grid HorizontalAlignment="Left" Height="160" Padding="4,2,0,0">  
+            <Grid HorizontalAlignment="Left" Height="160" Width="180" Padding="4,2,0,0">  
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="100"/>
                     <ColumnDefinition Width="12"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="8"/>
-                    <ColumnDefinition />
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -33,7 +33,7 @@
                         <Setter Property="VerticalAlignment" Value="Top"/>
                     </Style>
                 </Grid.Resources>
-                <Image Grid.RowSpan="7" Source="{Binding Cover}" Width="100" HorizontalAlignment="Left"/>
+                <Image Grid.RowSpan="7" Source="{Binding Cover}" Width="100"/>
                 <TextBlock Grid.Column="2" Grid.ColumnSpan="3" Text="{Binding Title}" TextWrapping="Wrap" VerticalAlignment="Bottom"/>
                 <TextBlock Grid.Row="2" Grid.Column="2" Text="&#xE13D;" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Bottom"/>
                 <TextBlock Grid.Row="2" Grid.Column="4" Text="{x:Bind Author}" TextWrapping="Wrap"/>

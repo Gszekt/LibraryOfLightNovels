@@ -112,7 +112,6 @@
     <Compile Include="XamlPage\ChapterIndexPage.xaml.cs">
       <DependentUpon>ChapterIndexPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CoverUriToCoverImageConverter.cs" />
     <Compile Include="ParserClass\HTMLParser.cs" />
     <Compile Include="EntityClass\Illustration.cs" />
     <Compile Include="ParserClass\IllustrationUriParser.cs" />

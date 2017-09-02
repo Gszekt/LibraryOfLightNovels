@@ -9,6 +9,10 @@ namespace 轻小说文库 {
 		public event PropertyChangedEventHandler PropertyChanged;
 		//public ObservableCollection<BookIndex> Indexes { get; set; }
 
+		public string BID { get; set; }
+		public string DelID { get; set; }
+		public bool IsCollected { get; set; }
+
 		private string title;
 		private string author;
 		private string classfication;

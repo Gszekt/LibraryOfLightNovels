@@ -1,4 +1,5 @@
-﻿using Windows.Storage;
+﻿using System;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -28,8 +29,7 @@ namespace 轻小说文库 {
 					new Button { Name = "updatedNovelsButton" });
 			}
 			else {
-				MainPage.TipsTextBlock.Text = "网络或服务器故障！";
-				MainPage.TipsStackPanel.Visibility = Visibility.Visible;
+				await MainPage.PopMessageDialog("网络或服务器故障！");
 			}
 		}
 
